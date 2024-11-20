@@ -1,1 +1,4 @@
-print("hello world")
+from sys import argv
+
+
+print("hello worrld")
