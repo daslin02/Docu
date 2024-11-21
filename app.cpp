@@ -1,11 +1,13 @@
 #include <main.h>
+#include <pyController.h>
+
+#include <iostream>
+
 #include <qapplication.h>
 #include <qcontainerfwd.h>
 #include <qmainwindow.h>
-#include <iostream>
 #include <qobject.h>
 #include <qpushbutton.h>
-#include <pyController.h>
 
 int main (int arg , char *argv[])
 {
@@ -16,7 +18,8 @@ int main (int arg , char *argv[])
     ui.setupUi(&window);
     baseStyle(&ui);
 
-    generate(QStringList());
+//    generate(QStringList());
+    runEvent(&ui, &window);    
     
     QObject::connect(ui.PB_prihod , &QPushButton::clicked , &window , [ &ui]()
             {
