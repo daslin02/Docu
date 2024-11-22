@@ -1,6 +1,4 @@
-#include <main.h>
-#include <pyController.h>
-
+#include <guiController.h>
 #include <iostream>
 
 #include <qapplication.h>
@@ -11,21 +9,18 @@
 
 int main (int arg , char *argv[])
 {
-
     QApplication app(arg,argv);
-    Ui::MainWindow ui;
-    QMainWindow window;
-    ui.setupUi(&window);
-    baseStyle(&ui);
+    gui::docuGuiController window;
+    window.startGui();
+    //baseStyle(&ui);
 
 //    generate(QStringList());
-    runEvent(&ui, &window);    
+    //runEvent(&ui, &window);    
     
-    QObject::connect(ui.PB_prihod , &QPushButton::clicked , &window , [ &ui]()
-            {
-                ui.SW_stacked->setCurrentIndex(1);
+   // QObject::connect(ui.PB_prihod , &QPushButton::clicked , &window , [ &ui]()
+     //       {
+         //       ui.SW_stacked->setCurrentIndex(1);
                 
-            });
-    window.show();
+       //     });
     return app.exec() ;
 }

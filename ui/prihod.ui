@@ -50,7 +50,7 @@ font-weight:bold;</string>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="PB_find">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
@@ -100,7 +100,7 @@ font-weight:bold;</string>
        </spacer>
       </item>
       <item row="2" column="0">
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="PB_add">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
@@ -114,7 +114,7 @@ font-weight:bold;</string>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="PB_delete">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
