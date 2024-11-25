@@ -16,8 +16,9 @@ void generate(QStringList argument)
 {
     QProcess genJson;
     QString genJsonPath = pyPath+"/script/genJson.py";
+    QString savePath = pyPath+"/save/save.json";
     qDebug() << genJsonPath ; 
-    genJson.start(QString("python"), QStringList() << genJsonPath  << argument);
+    genJson.start(QString("python"), QStringList() << genJsonPath  << savePath << argument);
 
     genJson.waitForFinished();
     QByteArray data = genJson.readAllStandardOutput();

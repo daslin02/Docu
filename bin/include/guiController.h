@@ -2,8 +2,12 @@
 #include <QMutex>
 #include <QThread>
 
+#include <rashod.h>
+#include <prihod.h>
+#include <ostatok.h>
+
+#include <iostream>
 #include <main.h>
-#include <qtmetamacros.h>
 #include <suplier.h>
 #include <pyController.h>
 
@@ -17,8 +21,19 @@ public:
     ~docuGuiController();
     bool startGui();
 public slots:
-    
+   void swapPrihod();
+   void swapOstatok();
+   void swapRashod();
 private :
+    QWidget* prihod;
+    Ui::W_prihod* UiPrihod;
+
+    QWidget* rashod;
+    Ui::W_rashod* UiRashod;
+    
+    QWidget* ostatok;
+    Ui::W_ostatok* UiOstatok;
+   
     QMutex* mute;
     Ui::MainWindow* UiMainWindow;
     void runAllEvent();
