@@ -5,16 +5,6 @@
 #include "rashod.h"
 #include <guiController.h>
 #include <qdebug.h>
-#include <qlogging.h>
-#include <qmainwindow.h>
-#include <qmutex.h>
-#include <qnamespace.h>
-#include <qobject.h>
-#include <qpushbutton.h>
-#include <qsize.h>
-#include <qthread.h>
-#include <qvariant.h>
-#include <qwidget.h>
 
 
 
