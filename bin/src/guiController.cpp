@@ -30,9 +30,10 @@ gui::docuGuiController::docuGuiController(QMainWindow* parent) : QMainWindow(par
 }
 gui::docuGuiController::~docuGuiController()
 {
+
     delete UiMainWindow;
+    posOverlay->end(); 
     delete PointOverlay;
-   
     if (dialogPrihod->isVisible())
     {
         dialogPrihod->close();
@@ -101,7 +102,14 @@ QSize gui::docuGuiController::centerPoint()
     int centerY =  geometry.y() + geometry.height() / 2 ;
     return QSize(centerX , centerY);
 }
-
+QSize gui::docuGuiController::getCentral()
+{
+    return central;
+}
+void gui::docuGuiController::setCentral()
+{
+    central = centerPoint();
+}
 void gui::docuGuiController::runAllEvent()
 {
     //conect swap widget in stacked widget
@@ -115,14 +123,16 @@ void gui::docuGuiController::runAllEvent()
 
 void gui::docuGuiController::showDialogPrihod()
 {
-    //QRect overlayGeometry = dialogPrihod->geometry();
+    QRect overlayGeometry = dialogPrihod->geometry();
+   
+    int centerX =  overlayGeometry.x() + overlayGeometry.width() / 2 ;
+    int centerY =  overlayGeometry.y() + overlayGeometry.height() / 2 ;
     
-    //int centerX =  overlayGeometry.x() + overlayGeometry.width() / 2 ;
-    //int centerY =  overlayGeometry.y() + overlayGeometry.height() / 2 ;
-    
-    //QSize center = this->centerPoint();
+    QSize center = this->centerPoint();
 
-    //dialogPrihod->move(center.width() - centerX/2, center.height() - centerY/2);
+    dialogPrihod->move(center.width() - centerX/2, center.height() - centerY/2);
+    
+    
     posOverlay->go();
     dialogPrihod->raise();
     dialogPrihod->show();    
@@ -153,7 +163,7 @@ gui::positionOverlay::positionOverlay(docuGuiController* docus,
         QWidget* overlays , Ui::dialogPrihod* ui  , QObject* parent) :
         QThread(parent) , overlay(overlays) , uiOverlay(ui) , docu(docus)
 {
-    
+   docu->setCentral();
 }
 gui::positionOverlay::~positionOverlay()
 {
@@ -162,24 +172,32 @@ gui::positionOverlay::~positionOverlay()
     delete overlay;
     closed= true;
 }
+void gui::positionOverlay::end()
+{
+    closed = true; 
+}
 void gui::positionOverlay::run()
 {
     
     while(true)
     {
+        QThread::msleep(1);
         if (running)
         {
             QSize center = docu->centerPoint();
-            
-            int X = overlay->geometry().x() + overlay->geometry().width()/2;
-            int Y = overlay->geometry().y() + overlay->geometry().height()/2;
-            overlay->move(center.width()-X/2 , center.height()-Y/2);
+            QSize last = docu->getCentral();
+            if (last.width() != center.width() || last.height() != center.height())
+            {
+                docu->setCentral();
+                int X = overlay->geometry().x() + overlay->geometry().width()/2;
+                int Y = overlay->geometry().y() + overlay->geometry().height()/2;
+                overlay->move(center.width()-X/2 , center.height()-Y/2);
+            }    
         }
         if(closed)
         {
             break;
         }
-        QThread::msleep(10);
     }
 }
 void gui::positionOverlay::go()
@@ -190,3 +208,4 @@ void gui::positionOverlay::stop()
 {
     running = false;
 }
+

@@ -6,6 +6,7 @@
 #include <qobject.h>
 #include <qsize.h>
 #include <qthread.h>
+#include <qvariant.h>
 #include <qwidget.h>
 #include <rashod.h>
 #include <prihod.h>
@@ -34,6 +35,8 @@ public slots:
    void showDialogPrihod();
    void closeDialogPrihod();
    QSize centerPoint();
+   QSize getCentral();
+   void setCentral();
 private :
     QWidget* prihod;
     Ui::W_prihod* UiPrihod;
@@ -50,6 +53,7 @@ private :
     QMutex* PointOverlay;
     positionOverlay* posOverlay;
     Ui::MainWindow* UiMainWindow;
+    QSize central;
     void runAllEvent();
 };
 
@@ -61,6 +65,7 @@ public:
    // explicit positionOverlay(QWidget* overlay ,QObject*  ui,   QObject* parent = nullptr);
     //explicit positionOverlay(QWidget* overlay ,QObject*  ui,   QObject* parent = nullptr);
     void go();
+    void end();
     void stop();
     void run() override;
 private:
@@ -69,5 +74,21 @@ private:
     QWidget* overlay;
     bool closed = false;
     bool running  = false;
+};
+class Overlay 
+{
+public:
+    explicit Overlay(docuGuiController* docu , QWidget* over , Ui::dialogPrihod,
+            QWidget* parent = nullptr
+            );
+    ~Overlay();
+    void end();
+    void start();
+private :
+    QRect* central;
+    QThread* th;
+    bool running = false;
+    bool closed = false;
+
 };
 }
