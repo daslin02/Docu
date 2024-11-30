@@ -4,7 +4,9 @@
 #include "prihodWidget.h"
 #include "rashod.h"
 #include <guiController.h>
+#include <qcontainerfwd.h>
 #include <qdebug.h>
+#include <qstandarditemmodel.h>
 
 
 
@@ -14,9 +16,8 @@ gui::docuGuiController::docuGuiController(QMainWindow* parent) : QMainWindow(par
    UiMainWindow = new Ui::MainWindow;
    UiMainWindow->setupUi(this);   
    PointOverlay = new QMutex;
-   baseStyle(UiMainWindow);
    this->setMinimumSize(QSize(700,700));
-   runEvent(UiMainWindow, this); 
+   this->setWindowTitle("Docu");
 }
 gui::docuGuiController::~docuGuiController()
 {
@@ -76,12 +77,15 @@ bool gui::docuGuiController::startGui()
     //conect close event 
     connect(uiDialogPrihod->PB_closed , &QPushButton::clicked ,this,&docuGuiController::closeDialogPrihod); 
     dialogPrihod->close(); 
-
-
+    
     this->runAllEvent(); 
+    
+    
+
+
     this->show();
     
-    posOverlay = new gui::positionOverlay(this ,dialogPrihod , uiDialogPrihod  );
+    posOverlay = new gui::Overlay(this ,dialogPrihod  );
     posOverlay->start();
     return true;
 }
@@ -148,25 +152,24 @@ void gui::docuGuiController::swapRashod()
 
 
 
-// class positionOverlay:
-gui::positionOverlay::positionOverlay(docuGuiController* docus,
-        QWidget* overlays , Ui::dialogPrihod* ui  , QObject* parent) :
-        QThread(parent) , overlay(overlays) , uiOverlay(ui) , docu(docus)
+// class Overlay:
+gui::Overlay::Overlay(docuGuiController* docus,
+        QWidget* overlays , QObject* parent) :
+        QThread(parent) , overlay(overlays) ,docu(docus)
 {
    docu->setCentral();
 }
-gui::positionOverlay::~positionOverlay()
+gui::Overlay::~Overlay()
 {
     delete docu;
-    delete uiOverlay;
     delete overlay;
     closed= true;
 }
-void gui::positionOverlay::end()
+void gui::Overlay::end()
 {
     closed = true; 
 }
-void gui::positionOverlay::run()
+void gui::Overlay::run()
 {
     
     while(true)
@@ -190,11 +193,11 @@ void gui::positionOverlay::run()
         }
     }
 }
-void gui::positionOverlay::go()
+void gui::Overlay::go()
 {
     running = true;
 }
-void gui::positionOverlay::stop()
+void gui::Overlay::stop()
 {
     running = false;
 }

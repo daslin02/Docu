@@ -2,10 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# set(CMAKE_TOOLCHAIN_FILE "/home/daslin/.vcpkg/vcpkg-master/scripts/buildsystems/" CACHE STRING "Vcpkg toolchain file")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
-#find_package(nlohmann-json REQUIRED )
 
 set(PY_SCRIPT_DIR "${CMAKE_BINARY_DIR}/script")
 file(MAKE_DIRECTORY ${PY_SCRIPT_DIR})

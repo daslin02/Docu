@@ -5,6 +5,7 @@
 #include <qmutex.h>
 #include <qobject.h>
 #include <qsize.h>
+#include <qstandarditemmodel.h>
 #include <qthread.h>
 #include <qvariant.h>
 #include <qwidget.h>
@@ -17,11 +18,15 @@
 #include <suplier.h>
 #include <pyController.h>
 #include <prihodWidget.h>
-
+#include <QStandardItemModel>
 
 namespace gui {
 
-class positionOverlay; 
+extern QStandardItemModel* rashodModel;
+extern QStandardItemModel* prihodModel;
+extern QStandardItemModel* ostatokModel;
+
+class Overlay; 
 class docuGuiController :public QMainWindow
 {
 public:
@@ -51,44 +56,25 @@ private :
     Ui::dialogPrihod* uiDialogPrihod;
 
     QMutex* PointOverlay;
-    positionOverlay* posOverlay;
+    Overlay* posOverlay;
     Ui::MainWindow* UiMainWindow;
     QSize central;
     void runAllEvent();
 };
 
-class positionOverlay : public QThread
+class Overlay : public QThread
 {
 public:
-    explicit positionOverlay(docuGuiController* docu, QWidget* overlay ,Ui::dialogPrihod*  ui,   QObject* parent = nullptr);
-    ~positionOverlay();
-   // explicit positionOverlay(QWidget* overlay ,QObject*  ui,   QObject* parent = nullptr);
-    //explicit positionOverlay(QWidget* overlay ,QObject*  ui,   QObject* parent = nullptr);
+    explicit Overlay(docuGuiController* docu, QWidget* overlay ,   QObject* parent = nullptr);
+    ~Overlay();
     void go();
     void end();
     void stop();
     void run() override;
 private:
     docuGuiController* docu;
-    Ui::dialogPrihod* uiOverlay;
     QWidget* overlay;
     bool closed = false;
     bool running  = false;
-};
-class Overlay 
-{
-public:
-    explicit Overlay(docuGuiController* docu , QWidget* over , Ui::dialogPrihod,
-            QWidget* parent = nullptr
-            );
-    ~Overlay();
-    void end();
-    void start();
-private :
-    QRect* central;
-    QThread* th;
-    bool running = false;
-    bool closed = false;
-
 };
 }

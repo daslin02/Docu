@@ -2,7 +2,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
 
 add_library(pyController STATIC src/pyController.cpp)
-add_library(GuiControl STATIC src/guiController.cpp src/main.cpp src/suplier.cpp)
+add_library(GuiControl STATIC src/guiController.cpp src/main.cpp src/suplier.cpp src/browserWidget.cpp)
 add_library(fileManager STATIC src/fileManager.cpp)
 
 target_link_libraries(fileManager Qt6::Core)

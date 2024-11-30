@@ -142,8 +142,6 @@ namespace Ui {
     class MainWindow: public Ui_MainWindow {};
 } // namespace Ui
 
-void runEvent(Ui::MainWindow* ui , QMainWindow* win);
-void baseStyle(Ui::MainWindow* ui);
 
 
 QT_END_NAMESPACE
