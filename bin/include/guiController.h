@@ -1,3 +1,4 @@
+#include "browserWidget.h"
 #include <qmainwindow.h>
 #include <QMutex>
 #include <QThread>
@@ -22,6 +23,11 @@
 
 namespace gui {
 
+
+#define PRIHOD 0 
+#define OSTATOK 1 
+#define RASHOD 2 
+
 extern QStandardItemModel* rashodModel;
 extern QStandardItemModel* prihodModel;
 extern QStandardItemModel* ostatokModel;
@@ -36,12 +42,18 @@ public:
 public slots:
    void swapPrihod();
    void swapOstatok();
-   void swapRashod();   
+   void swapRashod();  
+
    void showDialogPrihod();
    void closeDialogPrihod();
+
    QSize centerPoint();
    QSize getCentral();
    void setCentral();
+
+   bool isFullValue();
+   void addElement();
+   void delElement();
 private :
     QWidget* prihod;
     Ui::W_prihod* UiPrihod;
@@ -52,11 +64,16 @@ private :
     QWidget* ostatok;
     Ui::W_ostatok* UiOstatok;
 
+    int isActive = 0;
     QWidget* dialogPrihod;
-    Ui::dialogPrihod* uiDialogPrihod;
-
+    Ui::dialogPrihod* uiAdd;
+    
+    QWidget* dialogFind;
+    Ui::browserWidget* uiFind;
+    
     QMutex* PointOverlay;
-    Overlay* posOverlay;
+    Overlay* findOverlay;
+    Overlay* addOverlay;
     Ui::MainWindow* UiMainWindow;
     QSize central;
     void runAllEvent();

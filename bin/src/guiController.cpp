@@ -1,12 +1,23 @@
+#include "browserWidget.h"
 #include "main.h"
 #include "ostatok.h"
 #include "prihod.h"
 #include "prihodWidget.h"
 #include "rashod.h"
+#include <algorithm>
+#include <cinttypes>
+#include <functional>
 #include <guiController.h>
 #include <qcontainerfwd.h>
 #include <qdebug.h>
+#include <qlayoutitem.h>
+#include <qlist.h>
+#include <qlogging.h>
+#include <qpushbutton.h>
+#include <qset.h>
 #include <qstandarditemmodel.h>
+#include <qtablewidget.h>
+#include <qwidget.h>
 
 
 
@@ -23,14 +34,14 @@ gui::docuGuiController::~docuGuiController()
 {
 
     delete UiMainWindow;
-    posOverlay->end(); 
+    addOverlay->end(); 
     delete PointOverlay;
     if (dialogPrihod->isVisible())
     {
         dialogPrihod->close();
     } 
     delete dialogPrihod; 
-    delete uiDialogPrihod;
+    delete uiAdd;
     
     delete UiPrihod;
     delete  prihod;
@@ -67,26 +78,33 @@ bool gui::docuGuiController::startGui()
     UiMainWindow->SW_stacked->addWidget(rashod);
   
     dialogPrihod = new QWidget(this);
-    uiDialogPrihod = new Ui::dialogPrihod;
-    uiDialogPrihod->setupUi(dialogPrihod);
+    uiAdd = new Ui::dialogPrihod;
+    uiAdd->setupUi(dialogPrihod);
    
     dialogPrihod->setStyleSheet("background:#1c1f20;");
     dialogPrihod->resize(500 , 500);
     dialogPrihod->move(100 , 100);
-    
+
+    dialogFind = new QWidget(this);
+    uiFind = new Ui::browserWidget;
+    uiFind->setupUi(dialogFind);
+
+
+    dialogFind->setStyleSheet("background:#1c1f20;");
+    dialogFind->resize(500 , 500);
+    dialogFind->move(100 , 100);
+
     //conect close event 
-    connect(uiDialogPrihod->PB_closed , &QPushButton::clicked ,this,&docuGuiController::closeDialogPrihod); 
+    connect(uiAdd->PB_closed , &QPushButton::clicked ,this,&docuGuiController::closeDialogPrihod); 
     dialogPrihod->close(); 
     
     this->runAllEvent(); 
     
-    
-
-
+   
     this->show();
     
-    posOverlay = new gui::Overlay(this ,dialogPrihod  );
-    posOverlay->start();
+    addOverlay = new gui::Overlay(this ,dialogPrihod  );
+    addOverlay->start();
     return true;
 }
 QSize gui::docuGuiController::centerPoint()
@@ -113,8 +131,17 @@ void gui::docuGuiController::runAllEvent()
 
    //conect dialog form
     connect(UiPrihod->PB_add  , &QPushButton::clicked , this , &docuGuiController::showDialogPrihod);
-}
+    
+    connect(UiRashod->PB_add  , &QPushButton::clicked , this , &docuGuiController::showDialogPrihod);
+   
 
+    connect(UiPrihod->PB_delete  , &QPushButton::clicked , this , &docuGuiController::delElement);
+    
+    connect(UiRashod->PB_delete  , &QPushButton::clicked , this , &docuGuiController::delElement);
+
+    connect(uiAdd->PB_add , &QPushButton::clicked , this , &docuGuiController::addElement);
+}
+    
 void gui::docuGuiController::showDialogPrihod()
 {
     QRect overlayGeometry = dialogPrihod->geometry();
@@ -127,30 +154,121 @@ void gui::docuGuiController::showDialogPrihod()
     dialogPrihod->move(center.width() - centerX/2, center.height() - centerY/2);
     
     
-    posOverlay->go();
+    addOverlay->go();
     dialogPrihod->raise();
     dialogPrihod->show();    
 }
 void gui::docuGuiController::closeDialogPrihod()
 {
-    posOverlay->stop();
+    addOverlay->stop();
     dialogPrihod->close();
 }
 
 void gui::docuGuiController::swapPrihod()
 {
-    UiMainWindow->SW_stacked->setCurrentIndex(0);
+    isActive = PRIHOD;
+    UiMainWindow->SW_stacked->setCurrentIndex(PRIHOD);
 } 
 void gui::docuGuiController::swapOstatok()
 {
-    UiMainWindow->SW_stacked->setCurrentIndex(1);
+    isActive = OSTATOK;
+    UiMainWindow->SW_stacked->setCurrentIndex(OSTATOK);
 } 
 void gui::docuGuiController::swapRashod()
 {
-    UiMainWindow->SW_stacked->setCurrentIndex(2);
+    isActive = RASHOD;
+    UiMainWindow->SW_stacked->setCurrentIndex(RASHOD);
 }
+void gui::docuGuiController::delElement()
+{
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        return;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
 
+   QList<QTableWidgetItem*> selectedItem = table->selectedItems();
+   if(selectedItem.isEmpty())
+   {
+       return;
+   } 
+   QSet<int> rowsToDel;
+   for(QTableWidgetItem* item : selectedItem )
+   {
+       rowsToDel.insert(item->row());
+   }
+   QList<int> sorted = rowsToDel.values();
+   std::sort(sorted.begin() , sorted.end() , std::greater<int>());
 
+   for (int i : sorted)
+   {
+       table->removeRow(i);
+   }
+
+}
+void gui::docuGuiController:: addElement()
+{
+    if (!isFullValue())
+    {
+        return;
+    }
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        return;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
+    int rows = table->rowCount()  ; 
+    table->insertRow(rows);
+    table->setItem(rows, 0 , new QTableWidgetItem(uiAdd->LE_name->text()));
+    table->setItem(rows , 1 , new QTableWidgetItem(uiAdd->DE_data->text()));
+    table->setItem(rows , 2 , new QTableWidgetItem(uiAdd->LE_count->text()));
+    table->setItem(rows,3 , new QTableWidgetItem(uiAdd->LE_unit->text())); 
+    table->setItem(rows, 4 , new QTableWidgetItem(uiAdd->LE_price->text()));
+    table->setItem(rows,5 , new QTableWidgetItem(uiAdd->LE_suplier->text()));
+}
+bool gui::docuGuiController::isFullValue()
+{
+    int IsAccept = 0 ;
+    if(!uiAdd->LE_name->text().isEmpty())
+    {
+        IsAccept++;
+    }
+    if(!uiAdd->DE_data->text().isEmpty())
+    {
+        IsAccept++;
+    } 
+    if(!uiAdd->LE_count->text().isEmpty())
+    {
+        IsAccept++;
+    }
+    if(!uiAdd->LE_unit->text().isEmpty())
+    {
+        IsAccept++;
+    }
+    if(!uiAdd->LE_price->text().isEmpty())
+    {
+        IsAccept++;
+    }
+    if(!uiAdd->LE_suplier->text().isEmpty())
+    {
+        IsAccept++;
+    }
+    return IsAccept == 6;
+}
 
 // class Overlay:
 gui::Overlay::Overlay(docuGuiController* docus,
