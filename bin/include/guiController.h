@@ -44,6 +44,9 @@ public slots:
    void swapOstatok();
    void swapRashod();  
 
+   void showDialogFind();
+   void closeDialogFind();
+
    void showDialogPrihod();
    void closeDialogPrihod();
 
@@ -54,6 +57,9 @@ public slots:
    bool isFullValue();
    void addElement();
    void delElement();
+   void findElement();
+   void replaceElement();
+
 private :
     QWidget* prihod;
     Ui::W_prihod* UiPrihod;

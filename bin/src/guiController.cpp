@@ -5,19 +5,12 @@
 #include "prihodWidget.h"
 #include "rashod.h"
 #include <algorithm>
-#include <cinttypes>
 #include <functional>
 #include <guiController.h>
 #include <qcontainerfwd.h>
 #include <qdebug.h>
-#include <qlayoutitem.h>
-#include <qlist.h>
 #include <qlogging.h>
 #include <qpushbutton.h>
-#include <qset.h>
-#include <qstandarditemmodel.h>
-#include <qtablewidget.h>
-#include <qwidget.h>
 
 
 
@@ -35,6 +28,7 @@ gui::docuGuiController::~docuGuiController()
 
     delete UiMainWindow;
     addOverlay->end(); 
+    findOverlay->end();
     delete PointOverlay;
     if (dialogPrihod->isVisible())
     {
@@ -42,6 +36,9 @@ gui::docuGuiController::~docuGuiController()
     } 
     delete dialogPrihod; 
     delete uiAdd;
+
+    delete dialogFind;
+    delete uiFind;
     
     delete UiPrihod;
     delete  prihod;
@@ -54,12 +51,14 @@ gui::docuGuiController::~docuGuiController()
 }
 bool gui::docuGuiController::startGui()
 {
+    // removve element stacked Widget
     while(UiMainWindow->SW_stacked->count() > 0)
     {
         QWidget* widget = UiMainWindow->SW_stacked->widget(0);
         UiMainWindow->SW_stacked->removeWidget(widget);
         delete widget;
     }
+    //inicializayion widget and ui 
     prihod = new QWidget();
     ostatok = new QWidget();
     rashod = new QWidget();
@@ -93,11 +92,11 @@ bool gui::docuGuiController::startGui()
     dialogFind->setStyleSheet("background:#1c1f20;");
     dialogFind->resize(500 , 500);
     dialogFind->move(100 , 100);
+   
 
-    //conect close event 
-    connect(uiAdd->PB_closed , &QPushButton::clicked ,this,&docuGuiController::closeDialogPrihod); 
+    //close all menu
     dialogPrihod->close(); 
-    
+    dialogFind->close();    
     this->runAllEvent(); 
     
    
@@ -105,6 +104,8 @@ bool gui::docuGuiController::startGui()
     
     addOverlay = new gui::Overlay(this ,dialogPrihod  );
     addOverlay->start();
+    findOverlay = new gui::Overlay(this ,dialogFind  );
+    findOverlay->start();
     return true;
 }
 QSize gui::docuGuiController::centerPoint()
@@ -124,6 +125,12 @@ void gui::docuGuiController::setCentral()
 }
 void gui::docuGuiController::runAllEvent()
 {
+    //conect close event 
+    connect(uiAdd->PB_closed , &QPushButton::clicked ,this,&docuGuiController::closeDialogPrihod); 
+    //conect close event find menu
+    connect(uiFind->PB_closedFind , &QPushButton::clicked ,this,&docuGuiController::closeDialogFind); 
+    connect(uiFind->PB_closedReplace , &QPushButton::clicked ,this,&docuGuiController::closeDialogFind); 
+
     //conect swap widget in stacked widget
     connect(UiMainWindow->PB_prihod , &QPushButton::clicked , this , &docuGuiController::swapPrihod);
     connect(UiMainWindow->PB_ostatok , &QPushButton::clicked , this , &docuGuiController::swapOstatok);
@@ -140,6 +147,24 @@ void gui::docuGuiController::runAllEvent()
     connect(UiRashod->PB_delete  , &QPushButton::clicked , this , &docuGuiController::delElement);
 
     connect(uiAdd->PB_add , &QPushButton::clicked , this , &docuGuiController::addElement);
+
+    //conect find menu 
+    connect(UiRashod->PB_find  , &QPushButton::clicked , this , &docuGuiController::showDialogFind);
+    
+    connect(UiRashod->PB_find  , &QPushButton::clicked , this , &docuGuiController::showDialogFind);
+  // from prihod 
+    connect(UiPrihod->PB_find  , &QPushButton::clicked , this , &docuGuiController::showDialogFind);
+    
+    connect(UiPrihod->PB_find  , &QPushButton::clicked , this , &docuGuiController::showDialogFind);
+    //from ostatok 
+    connect(UiOstatok->PB_find  , &QPushButton::clicked , this , &docuGuiController::showDialogFind);
+    
+    connect(UiOstatok->PB_find  , &QPushButton::clicked , this , &docuGuiController::showDialogFind);
+
+    //conect event replace and find functional
+
+    connect(uiFind->PB_find , &QPushButton::clicked , this , &docuGuiController::findElement);
+    connect(uiFind->PB_replace , &QPushButton::clicked , this , &docuGuiController::replaceElement);
 }
     
 void gui::docuGuiController::showDialogPrihod()
@@ -162,6 +187,28 @@ void gui::docuGuiController::closeDialogPrihod()
 {
     addOverlay->stop();
     dialogPrihod->close();
+}
+// Find menu on visible
+void gui::docuGuiController::showDialogFind()
+{
+    QRect overlayGeometry = dialogFind->geometry();
+   
+    int centerX =  overlayGeometry.x() + overlayGeometry.width() / 2 ;
+    int centerY =  overlayGeometry.y() + overlayGeometry.height() / 2 ;
+    
+    QSize center = this->centerPoint();
+
+    dialogFind->move(center.width() - centerX/2, center.height() - centerY/2);
+    
+    
+    findOverlay->go();
+    dialogFind->raise();
+    dialogFind->show();    
+}
+void gui::docuGuiController::closeDialogFind()
+{
+    findOverlay->stop();
+    dialogFind->close();
 }
 
 void gui::docuGuiController::swapPrihod()
@@ -239,6 +286,46 @@ void gui::docuGuiController:: addElement()
     table->setItem(rows,3 , new QTableWidgetItem(uiAdd->LE_unit->text())); 
     table->setItem(rows, 4 , new QTableWidgetItem(uiAdd->LE_price->text()));
     table->setItem(rows,5 , new QTableWidgetItem(uiAdd->LE_suplier->text()));
+}
+void gui::docuGuiController:: findElement()
+{
+    if (uiFind->LE_find->text().isEmpty()) 
+    {
+        return ; 
+    }
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        return;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
+}
+void gui::docuGuiController:: replaceElement()
+{
+
+    if (uiFind->LE_findReplace->text().isEmpty() || uiFind->LE_replace->text().isEmpty()
+            || isActive == OSTATOK) 
+    {
+        return ; 
+    }
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        return;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
 }
 bool gui::docuGuiController::isFullValue()
 {
