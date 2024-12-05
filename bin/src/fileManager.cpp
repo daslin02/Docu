@@ -5,18 +5,30 @@
 #include <qcontainerfwd.h>
 #include <qlogging.h>
 #include <string>
+#include <vector>
+
+#define DATA_SIZE 100
+
+namespace FM {
 
 
 struct dataItem
 {
-    bool isPrihod;
-    std::string name ;
-    std::string data;
-    std::string unit;
-    std::string count ;
-    std::string price ;
-    std::string suplier;
+    std::string name = "Undefined";
+    std::string data = "Undefined";
+    std::string unit = "Undefined";
+    std::string count = "Undefined";
+    std::string price = "Undefined";
+    std::string suplier = "Undefined";
 };
+struct dataTable
+{
+    std::string table = "Undefined";
+    dataItem *item[DATA_SIZE];
+};
+
+}
+
 std::string FM::currentPath = std::filesystem::current_path().string();
 std::string FM::currentFile = std::filesystem::current_path().string()+"/save/save.json";
 void FM::addProduct(QString name , QString data , QString price 
@@ -252,4 +264,34 @@ bool FM::setCurentPath(const std::string &path)
          return true;
     }   
    return false; 
-} 
+}
+std::vector<FM::dataTable> FM::loadTable()
+{    
+    json js ;
+    std::ifstream outfile(currentFile);
+    outfile >> js ; 
+    outfile.close(); 
+    std::vector<dataTable> table ; 
+    for (auto& product : js)
+    {
+        int point = 0 ;
+        dataItem items[DATA_SIZE] ;  
+        for (auto& prihodItem : product["prihod"])
+        {
+            items[point] = {product["name"] , prihodItem["data"] 
+                , prihodItem["unit"] , prihodItem["count"] 
+                , prihodItem["price"] , prihodItem["suplier"]};
+            point++;
+        }
+       table.push_back( {"prihod" , items} );
+        for (auto& rashodItem : product["rashod"])
+        {
+            items[point] = {product["name"] , rashodItem["data"] 
+                , rashodItem["unit"] , rashodItem["count"] 
+                , rashodItem["price"] , rashodItem["suplier"]};
+            point++;
+        }
+       table.push_back( {"prihod" , items} ); 
+    }
+    return table;
+}
