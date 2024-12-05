@@ -47,6 +47,10 @@ gui::docuGuiController::~docuGuiController()
     delete ostatok;
     delete UiOstatok;
 }
+void gui::docuGuiController::loadFile()
+{
+    qDebug() << "load my huy";
+}
 bool gui::docuGuiController::startGui()
 {
     // removve element stacked Widget
@@ -289,7 +293,9 @@ void gui::docuGuiController:: addElement()
         }
         else
         {
-        
+            FM::pushRashod(uiAdd->LE_name->text() , uiAdd->LE_count->text() 
+                    , uiAdd->LE_unit->text(),uiAdd->DE_data->text() ,
+                    uiAdd->LE_price->text() , uiAdd->LE_suplier->text());     
         }   
     }
     else

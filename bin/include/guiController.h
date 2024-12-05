@@ -39,6 +39,12 @@ public:
      explicit   docuGuiController(QMainWindow* parent = nullptr) ;
     ~docuGuiController();
     bool startGui();
+   
+    QSize centerPoint();
+   QSize getCentral();
+   void setCentral();
+   void loadFile();
+   bool isFullValue();
 public slots:
    void swapPrihod();
    void swapOstatok();
@@ -50,11 +56,6 @@ public slots:
    void showDialogPrihod();
    void closeDialogPrihod();
 
-   QSize centerPoint();
-   QSize getCentral();
-   void setCentral();
-
-   bool isFullValue();
    void addElement();
    void delElement();
    void findElement();

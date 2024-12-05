@@ -11,6 +11,7 @@ int main (int arg , char *argv[])
     QApplication app(arg,argv);
     gui::docuGuiController window;
     window.startGui();
+    window.loadFile();
     
     std::string path = FM::currentPath + "/save/save.json";
     return app.exec() ;

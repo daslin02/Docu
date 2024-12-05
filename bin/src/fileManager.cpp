@@ -7,7 +7,16 @@
 #include <string>
 
 
-
+struct dataItem
+{
+    bool isPrihod;
+    std::string name ;
+    std::string data;
+    std::string unit;
+    std::string count ;
+    std::string price ;
+    std::string suplier;
+};
 std::string FM::currentPath = std::filesystem::current_path().string();
 std::string FM::currentFile = std::filesystem::current_path().string()+"/save/save.json";
 void FM::addProduct(QString name , QString data , QString price 
@@ -29,7 +38,6 @@ void FM::addProduct(QString name , QString data , QString price
     if (currentFile != "")
     {
 
-        std::cout << currentFile << std::endl;
         std::ifstream outfile(currentFile);
         if (!fileIsEmpty(currentFile))
         {
@@ -133,6 +141,48 @@ bool FM::pushPrihod(QString name, QString count,QString unit ,QString  data , QS
                 {"suplier" , Ssuplier}
             };
             product["prihod"].push_back(newPrihod);
+   
+            std::ofstream file(currentFile);
+            file << js.dump(4);
+            file.close();
+
+            return true;
+        }
+    }
+    return false;
+}
+
+bool FM::pushRashod(QString name, QString count,QString unit ,QString  data , QString price , QString suplier)
+{
+    std::string Sname , Sdata , Sunit , Scount , Sprice , Ssuplier;
+    Sname = name.toStdString();
+    Sdata = data.toStdString(); 
+    Sunit= unit.toStdString();
+    Scount = count.toStdString();
+    Sprice = price.toStdString();
+    Ssuplier = suplier.toStdString();
+
+
+    json js ;
+    std::ifstream outfile(currentFile);
+    if (!fileIsEmpty(currentFile))
+    {
+        outfile >> js ; 
+    }
+    outfile.close();
+    for ( auto& product : js)
+    {
+        if (product["name"] == Sname)
+        {
+            json newPrihod = 
+            {
+                {"data" , Sdata},
+                {"price" , Sprice},
+                {"count", Scount},
+                {"unit" , Sunit},
+                {"suplier" , Ssuplier}
+            };
+            product["rashod"].push_back(newPrihod);
    
             std::ofstream file(currentFile);
             file << js.dump(4);
