@@ -6,10 +6,10 @@
 #include "rashod.h"
 #include <guiController.h>
 #include <fileManager.h>
-#include <iostream>
-#include <ostream>
 #include <qdebug.h>
 #include <qlogging.h>
+#include <vector>
+
 
 
 gui::docuGuiController::docuGuiController(QMainWindow* parent) : QMainWindow(parent)
@@ -49,7 +49,11 @@ gui::docuGuiController::~docuGuiController()
 }
 void gui::docuGuiController::loadFile()
 {
-    qDebug() << "load my huy";
+    std::vector<FM::dataTable> dates = FM::loadTable();
+    for(int i = 0 ; i < 100; i++)
+    {
+    
+    }
 }
 bool gui::docuGuiController::startGui()
 {

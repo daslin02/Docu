@@ -6,11 +6,13 @@
 #include <QString>
 
 
+#define DATA_SIZE 100
+
 using json = nlohmann::json;
 
 namespace FM {
 
- struct dataItem;
+struct dataTable;
 
 extern std::string currentPath  ;
 
@@ -30,7 +32,7 @@ bool pushPrihod(QString name,QString count, QString unit ,QString  data , QStrin
 //bool pushRashod(std::string name,std::string count , std::string unit ,std::string data , std::string price , std::string suplier);
 bool pushRashod(QString name,QString count ,QString unit ,QString  data , QString price , QString suplier);;
 
-dataItem loadTable();
+std::vector<FM::dataTable> loadTable();
 bool findFile( const std::string& path);
 bool createFile(const std::string& path);
 bool setCurentPath(const std::string& path);
