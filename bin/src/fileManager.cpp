@@ -1,13 +1,15 @@
 #include <fileManager.h>
 #include <fstream>
 #include <iostream>
+#include <ostream>
 #include <qcontainerfwd.h>
+#include <qlogging.h>
 #include <string>
 
 
 
 std::string FM::currentPath = std::filesystem::current_path().string();
-
+std::string FM::currentFile = std::filesystem::current_path().string()+"/save/save.json";
 void FM::addProduct(QString name , QString data , QString price 
         , QString unit , QString count , QString suplier)
 {
@@ -24,10 +26,12 @@ void FM::addProduct(QString name , QString data , QString price
     {
         return;
     }
-    if (currentPath != "")
+    if (currentFile != "")
     {
-        std::ifstream outfile(currentPath);
-        if (!fileIsEmpty(currentPath))
+
+        std::cout << currentFile << std::endl;
+        std::ifstream outfile(currentFile);
+        if (!fileIsEmpty(currentFile))
         {
             outfile >> js ; 
         }
@@ -41,16 +45,20 @@ void FM::addProduct(QString name , QString data , QString price
         prihod.push_back(
                 {{"data" , Sdata} ,
                 {"price" , Sprice} ,
-                {"count" , Scount}, 
+                {"count" , Scount},
+                    {"unit" , Sunit}, 
                 {"suplier" , Ssuplier}}  );
 
+        json rashod = json::array();
         item["prihod"] = {prihod};
+        item["rashod"] = {rashod};
         js.push_back(item);
         
-        std::ofstream file(currentPath);
+        std::ofstream file(currentFile);
         file << js.dump(4);
         file.close();
-    }    
+        return;
+    }   
 }
 
 void FM::addProduct(std::string name , std::string data , std::string price 
@@ -79,7 +87,8 @@ void FM::addProduct(std::string name , std::string data , std::string price
         prihod.push_back(
                 {{"data" , data} ,
                 {"price" , price} ,
-                {"count" , count}, 
+                {"count" , count},
+                    {"unit" , unit}, 
                 {"suplier" , suplier}}  );
 
         item["prihod"] = {prihod};
@@ -93,7 +102,47 @@ void FM::addProduct(std::string name , std::string data , std::string price
 
 
 }
+bool FM::pushPrihod(QString name, QString count,QString unit ,QString  data , QString price , QString suplier)
+{
+    std::string Sname , Sdata , Sunit , Scount , Sprice , Ssuplier;
+    Sname = name.toStdString();
+    Sdata = data.toStdString(); 
+    Sunit= unit.toStdString();
+    Scount = count.toStdString();
+    Sprice = price.toStdString();
+    Ssuplier = suplier.toStdString();
 
+
+    json js ;
+    std::ifstream outfile(currentFile);
+    if (!fileIsEmpty(currentFile))
+    {
+        outfile >> js ; 
+    }
+    outfile.close();
+    for ( auto& product : js)
+    {
+        if (product["name"] == Sname)
+        {
+            json newPrihod = 
+            {
+                {"data" , Sdata},
+                {"price" , Sprice},
+                {"count", Scount},
+                {"unit" , Sunit},
+                {"suplier" , Ssuplier}
+            };
+            product["prihod"].push_back(newPrihod);
+   
+            std::ofstream file(currentFile);
+            file << js.dump(4);
+            file.close();
+
+            return true;
+        }
+    }
+    return false;
+}
 bool FM::fileIsEmpty(const std::string& path)
 {
      std::ifstream file(path);

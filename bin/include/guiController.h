@@ -10,14 +10,14 @@
 #include <qthread.h>
 #include <qvariant.h>
 #include <qwidget.h>
+
 #include <rashod.h>
 #include <prihod.h>
 #include <ostatok.h>
-
-#include <iostream>
 #include <main.h>
 #include <suplier.h>
 #include <pyController.h>
+
 #include <prihodWidget.h>
 #include <QStandardItemModel>
 

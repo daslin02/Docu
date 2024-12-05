@@ -4,14 +4,12 @@
 #include "prihod.h"
 #include "prihodWidget.h"
 #include "rashod.h"
-#include <algorithm>
-#include <functional>
 #include <guiController.h>
-#include <qcontainerfwd.h>
+#include <fileManager.h>
+#include <iostream>
+#include <ostream>
 #include <qdebug.h>
 #include <qlogging.h>
-#include <qpushbutton.h>
-
 
 
 gui::docuGuiController::docuGuiController(QMainWindow* parent) : QMainWindow(parent)
@@ -277,6 +275,34 @@ void gui::docuGuiController:: addElement()
     case RASHOD:
          table = UiRashod->TW_rashod;
          break;
+    }
+    
+    bool isFind = FM::findElement((FM::currentPath+"/save/save.json") ,  uiAdd->LE_name->text().toStdString());
+    if(isFind)
+    {
+        if(isActive==PRIHOD)
+        {
+            FM::pushPrihod(uiAdd->LE_name->text() , uiAdd->LE_count->text() 
+                    , uiAdd->LE_unit->text(),uiAdd->DE_data->text() ,
+                    uiAdd->LE_price->text() , uiAdd->LE_suplier->text()
+                    );
+        }
+        else
+        {
+        
+        }   
+    }
+    else
+    {
+        if (isActive == PRIHOD)
+        {
+        FM::addProduct(uiAdd->LE_name->text() , uiAdd->DE_data->text() 
+                , uiAdd->LE_price->text() , uiAdd->LE_unit->text() ,
+                uiAdd->LE_count->text() , uiAdd->LE_suplier->text() ); 
+        }
+        else {
+            return;
+        }
     }
     int rows = table->rowCount()  ; 
     table->insertRow(rows);
