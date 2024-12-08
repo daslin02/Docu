@@ -6,6 +6,7 @@
 #include "rashod.h"
 #include <guiController.h>
 #include <fileManager.h>
+#include <iostream>
 #include <qdebug.h>
 #include <qlogging.h>
 #include <vector>
@@ -49,10 +50,11 @@ gui::docuGuiController::~docuGuiController()
 }
 void gui::docuGuiController::loadFile()
 {
-    std::vector<FM::dataTable> dates = FM::loadTable();
-    for(int i = 0 ; i < 100; i++)
+    std::vector<FM::dataItem> dates = FM::loadTable();
+
+    for (FM::dataItem data : dates)
     {
-    
+        std::cout << data.typeTable << " " << data.name << std::endl;
     }
 }
 bool gui::docuGuiController::startGui()

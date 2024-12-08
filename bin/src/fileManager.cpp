@@ -1,6 +1,7 @@
 #include <fileManager.h>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <ostream>
 #include <qcontainerfwd.h>
 #include <qlogging.h>
@@ -9,25 +10,6 @@
 
 #define DATA_SIZE 100
 
-namespace FM {
-
-
-struct dataItem
-{
-    std::string name = "Undefined";
-    std::string data = "Undefined";
-    std::string unit = "Undefined";
-    std::string count = "Undefined";
-    std::string price = "Undefined";
-    std::string suplier = "Undefined";
-};
-struct dataTable
-{
-    std::string table = "Undefined";
-    dataItem *item[DATA_SIZE];
-};
-
-}
 
 std::string FM::currentPath = std::filesystem::current_path().string();
 std::string FM::currentFile = std::filesystem::current_path().string()+"/save/save.json";
@@ -144,20 +126,19 @@ bool FM::pushPrihod(QString name, QString count,QString unit ,QString  data , QS
     {
         if (product["name"] == Sname)
         {
-            json newPrihod = 
+            product["prihod"][0].push_back(
             {
-                {"data" , Sdata},
-                {"price" , Sprice},
+                {"data", Sdata},
+                {"price", Sprice},
                 {"count", Scount},
-                {"unit" , Sunit},
-                {"suplier" , Ssuplier}
-            };
-            product["prihod"].push_back(newPrihod);
-   
+                {"unit", Sunit},
+                {"suplier", Ssuplier}
+            });
+
             std::ofstream file(currentFile);
             file << js.dump(4);
             file.close();
-
+    
             return true;
         }
     }
@@ -194,7 +175,7 @@ bool FM::pushRashod(QString name, QString count,QString unit ,QString  data , QS
                 {"unit" , Sunit},
                 {"suplier" , Ssuplier}
             };
-            product["rashod"].push_back(newPrihod);
+            product["rashod"][0].push_back(newPrihod);
    
             std::ofstream file(currentFile);
             file << js.dump(4);
@@ -265,33 +246,44 @@ bool FM::setCurentPath(const std::string &path)
     }   
    return false; 
 }
-std::vector<FM::dataTable> FM::loadTable()
+std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
 {    
     json js ;
     std::ifstream outfile(currentFile);
     outfile >> js ; 
     outfile.close(); 
-    std::vector<dataTable> table ; 
+    std::vector<dataItem> table ; 
     for (auto& product : js)
     {
         int point = 0 ;
         dataItem items[DATA_SIZE] ;  
-        for (auto& prihodItem : product["prihod"])
+        for (auto& prihodArray : product["prihod"])
         {
-            items[point] = {product["name"] , prihodItem["data"] 
-                , prihodItem["unit"] , prihodItem["count"] 
-                , prihodItem["price"] , prihodItem["suplier"]};
-            point++;
+            for(auto& prihodItem : prihodArray)
+            { 
+            // 0 this is PRIHOD macros for guiController
+                table.push_back({0 ,product["name"] ,
+                        prihodItem["data"] , prihodItem["unit"] , prihodItem["count"],
+                        prihodItem["price"] , prihodItem["suplier"]
+                        });
+            }
         }
-       table.push_back( {"prihod" , items} );
-        for (auto& rashodItem : product["rashod"])
+        for (auto& rashodArray : product["rashod"])
         {
-            items[point] = {product["name"] , rashodItem["data"] 
-                , rashodItem["unit"] , rashodItem["count"] 
-                , rashodItem["price"] , rashodItem["suplier"]};
-            point++;
+            for (auto& rashodItem : rashodArray)
+            {
+                if (rashodItem.is_object())
+                {
+                // 2 this is RASHOD for guiController
+                table.push_back({2 ,product["name"] ,
+                     rashodItem["data"] , rashodItem["unit"] , rashodItem["count"],
+                        rashodItem["price"] , rashodItem["suplier"]
+                        });
+            
+                }      
+            }
         }
-       table.push_back( {"prihod" , items} ); 
+
     }
     return table;
 }

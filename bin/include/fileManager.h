@@ -1,3 +1,5 @@
+#ifndef FM_H
+#define FM_h
 #include <fstream>
 
 #include <nlohmann-json/json.hpp>
@@ -12,7 +14,17 @@ using json = nlohmann::json;
 
 namespace FM {
 
-struct dataTable;
+struct dataItem
+{
+    int typeTable = -1;
+    std::string name = "Undefined";
+    std::string data = "Undefined";
+    std::string unit = "Undefined";
+    std::string count = "Undefined";
+    std::string price = "Undefined";
+    std::string suplier = "Undefined";
+};
+
 
 extern std::string currentPath  ;
 
@@ -32,9 +44,11 @@ bool pushPrihod(QString name,QString count, QString unit ,QString  data , QStrin
 //bool pushRashod(std::string name,std::string count , std::string unit ,std::string data , std::string price , std::string suplier);
 bool pushRashod(QString name,QString count ,QString unit ,QString  data , QString price , QString suplier);;
 
-std::vector<FM::dataTable> loadTable();
+std::vector<FM::dataItem> loadTable();
 bool findFile( const std::string& path);
 bool createFile(const std::string& path);
 bool setCurentPath(const std::string& path);
 bool fileIsEmpty(const std::string& path);
 }
+
+#endif
