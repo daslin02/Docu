@@ -6,9 +6,12 @@
 #include "rashod.h"
 #include <guiController.h>
 #include <fileManager.h>
-#include <iostream>
+#include <qcontainerfwd.h>
 #include <qdebug.h>
 #include <qlogging.h>
+#include <qobject.h>
+#include <qtablewidget.h>
+#include <qthread.h>
 #include <vector>
 
 
@@ -51,10 +54,24 @@ gui::docuGuiController::~docuGuiController()
 void gui::docuGuiController::loadFile()
 {
     std::vector<FM::dataItem> dates = FM::loadTable();
-
+    QTableWidget *table ;
     for (FM::dataItem data : dates)
     {
-        std::cout << data.typeTable << " " << data.name << std::endl;
+        if (data.typeTable == PRIHOD)
+        {
+            table = UiPrihod->TW_prihod;
+        }
+        else {
+            table = UiRashod->TW_rashod;
+        }
+        int rows = table->rowCount();
+        table->insertRow(rows);
+        table->setItem(rows, 0, new QTableWidgetItem(QString::fromStdString(data.name)));
+        table->setItem(rows , 1 , new QTableWidgetItem(QString::fromStdString(data.data)));
+        table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.count)));
+        table->setItem(rows,3 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
+        table->setItem(rows, 4 , new QTableWidgetItem(QString::fromStdString(data.price)));
+        table->setItem(rows,5 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
     }
 }
 bool gui::docuGuiController::startGui()
@@ -114,6 +131,7 @@ bool gui::docuGuiController::startGui()
     addOverlay->start();
     findOverlay = new gui::Overlay(this ,dialogFind  );
     findOverlay->start();
+    threadItem = new gui::trackActiveItem(activeItem );
     return true;
 }
 QSize gui::docuGuiController::centerPoint()
@@ -264,6 +282,11 @@ void gui::docuGuiController::delElement()
 
    for (int i : sorted)
    {
+       qDebug() << "remove element";
+       table->item(i , 0)->text(); 
+       FM::removeElement(table->item(i , 0)->text(),isActive,
+               table->item(i, 1)->text(),
+               table->item(i, 2)->text() , table->item(i, 4)->text());
        table->removeRow(i);
    }
 
@@ -394,7 +417,19 @@ bool gui::docuGuiController::isFullValue()
     }
     return IsAccept == 6;
 }
-
+int gui::docuGuiController::getActive()
+{
+    return isActive;
+}
+QTableWidget* gui::docuGuiController::isActiveTable()
+{
+    switch (isActive) {
+    case PRIHOD:
+        return  UiPrihod->TW_prihod;  
+    case RASHOD:
+         return  UiRashod->TW_rashod;
+    }
+}
 // class Overlay:
 gui::Overlay::Overlay(docuGuiController* docus,
         QWidget* overlays , QObject* parent) :
@@ -443,5 +478,26 @@ void gui::Overlay::go()
 void gui::Overlay::stop()
 {
     running = false;
+}
+// class trackActiveItem:
+gui::trackActiveItem::trackActiveItem(gui::docuGuiController* docu , QList<QTableWidgetItem*>* item,
+        QObject* parent) : docu(docu) , items(item) ,QThread(parent)
+{
+
+}
+void gui::trackActiveItem::run()
+{
+    while(!isStoped)
+    {
+        QThread::msleep(100);
+        if (docu->getActive() != OSTATOK) {continue;}
+       
+        //what fuck did i do...
+        *items = docu->isActiveTable()->selectedItems();  
+    }
+}
+void gui::trackActiveItem::stop()
+{
+    isStoped = true;
 }
 
