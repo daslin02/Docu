@@ -43,7 +43,7 @@ bool pushPrihod(QString name,QString count, QString unit ,QString  data , QStrin
 
 //bool pushRashod(std::string name,std::string count , std::string unit ,std::string data , std::string price , std::string suplier);
 bool pushRashod(QString name,QString count ,QString unit ,QString  data , QString price , QString suplier);;
-
+void removeElement(QString name , int typeTable , QString data , QString count , QString price);
 std::vector<FM::dataItem> loadTable();
 bool findFile( const std::string& path);
 bool createFile(const std::string& path);

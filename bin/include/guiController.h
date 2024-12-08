@@ -1,4 +1,6 @@
 #include "browserWidget.h"
+#include <qlist.h>
+#include <qlocale.h>
 #include <qmainwindow.h>
 #include <QMutex>
 #include <QThread>
@@ -7,6 +9,7 @@
 #include <qobject.h>
 #include <qsize.h>
 #include <qstandarditemmodel.h>
+#include <qtablewidget.h>
 #include <qthread.h>
 #include <qvariant.h>
 #include <qwidget.h>
@@ -32,7 +35,8 @@ extern QStandardItemModel* rashodModel;
 extern QStandardItemModel* prihodModel;
 extern QStandardItemModel* ostatokModel;
 
-class Overlay; 
+class Overlay;
+class trackActiveItem;
 class docuGuiController :public QMainWindow
 {
 public:
@@ -42,8 +46,10 @@ public:
    
     QSize centerPoint();
    QSize getCentral();
+   QTableWidget* isActiveTable();
    void setCentral();
    void loadFile();
+   int getActive();
    bool isFullValue();
 public slots:
    void swapPrihod();
@@ -55,12 +61,10 @@ public slots:
 
    void showDialogPrihod();
    void closeDialogPrihod();
-
    void addElement();
    void delElement();
    void findElement();
    void replaceElement();
-
 private :
     QWidget* prihod;
     Ui::W_prihod* UiPrihod;
@@ -77,6 +81,9 @@ private :
     
     QWidget* dialogFind;
     Ui::browserWidget* uiFind;
+   
+    QList<QTableWidgetItem*>* activeItem;
+    trackActiveItem* threadItem;
     
     QMutex* PointOverlay;
     Overlay* findOverlay;
@@ -100,5 +107,16 @@ private:
     QWidget* overlay;
     bool closed = false;
     bool running  = false;
+};
+class trackActiveItem : QThread
+{
+public:
+    explicit trackActiveItem(docuGuiController* docu, QList<QTableWidgetItem*>* item, QObject* parent = nullptr);
+    void run() override;
+    void stop();
+private:
+    docuGuiController* docu;
+    QList<QTableWidgetItem*>*  items;
+    bool isStoped = false;
 };
 }
