@@ -36,8 +36,7 @@ extern QStandardItemModel* prihodModel;
 extern QStandardItemModel* ostatokModel;
 
 class Overlay;
-class trackActiveItem;
-class docuGuiController :public QMainWindow
+class docuGuiController : public QMainWindow
 {
 public:
      explicit   docuGuiController(QMainWindow* parent = nullptr) ;
@@ -46,7 +45,6 @@ public:
    
     QSize centerPoint();
    QSize getCentral();
-   QTableWidget* isActiveTable();
    void setCentral();
    void loadFile();
    int getActive();
@@ -82,8 +80,6 @@ private :
     QWidget* dialogFind;
     Ui::browserWidget* uiFind;
    
-    QList<QTableWidgetItem*>* activeItem;
-    trackActiveItem* threadItem;
     
     QMutex* PointOverlay;
     Overlay* findOverlay;
@@ -107,16 +103,5 @@ private:
     QWidget* overlay;
     bool closed = false;
     bool running  = false;
-};
-class trackActiveItem : QThread
-{
-public:
-    explicit trackActiveItem(docuGuiController* docu, QList<QTableWidgetItem*>* item, QObject* parent = nullptr);
-    void run() override;
-    void stop();
-private:
-    docuGuiController* docu;
-    QList<QTableWidgetItem*>*  items;
-    bool isStoped = false;
 };
 }

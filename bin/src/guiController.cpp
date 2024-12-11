@@ -131,7 +131,6 @@ bool gui::docuGuiController::startGui()
     addOverlay->start();
     findOverlay = new gui::Overlay(this ,dialogFind  );
     findOverlay->start();
-    threadItem = new gui::trackActiveItem(activeItem );
     return true;
 }
 QSize gui::docuGuiController::centerPoint()
@@ -421,15 +420,6 @@ int gui::docuGuiController::getActive()
 {
     return isActive;
 }
-QTableWidget* gui::docuGuiController::isActiveTable()
-{
-    switch (isActive) {
-    case PRIHOD:
-        return  UiPrihod->TW_prihod;  
-    case RASHOD:
-         return  UiRashod->TW_rashod;
-    }
-}
 // class Overlay:
 gui::Overlay::Overlay(docuGuiController* docus,
         QWidget* overlays , QObject* parent) :
@@ -479,25 +469,3 @@ void gui::Overlay::stop()
 {
     running = false;
 }
-// class trackActiveItem:
-gui::trackActiveItem::trackActiveItem(gui::docuGuiController* docu , QList<QTableWidgetItem*>* item,
-        QObject* parent) : docu(docu) , items(item) ,QThread(parent)
-{
-
-}
-void gui::trackActiveItem::run()
-{
-    while(!isStoped)
-    {
-        QThread::msleep(100);
-        if (docu->getActive() != OSTATOK) {continue;}
-       
-        //what fuck did i do...
-        *items = docu->isActiveTable()->selectedItems();  
-    }
-}
-void gui::trackActiveItem::stop()
-{
-    isStoped = true;
-}
-

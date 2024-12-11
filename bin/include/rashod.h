@@ -42,7 +42,7 @@ public:
     {
         if (W_rashod->objectName().isEmpty())
             W_rashod->setObjectName(QString::fromUtf8("W_rashod"));
-        W_rashod->resize(658, 617);
+        W_rashod->resize(658, 609);
         verticalLayout = new QVBoxLayout(W_rashod);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         F_tipPanel = new QFrame(W_rashod);
@@ -108,8 +108,8 @@ public:
         verticalLayout->addWidget(F_tipPanel);
 
         TW_rashod = new QTableWidget(W_rashod);
-        if (TW_rashod->columnCount() < 6)
-            TW_rashod->setColumnCount(6);
+        if (TW_rashod->columnCount() < 7)
+            TW_rashod->setColumnCount(7);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         TW_rashod->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
@@ -122,6 +122,8 @@ public:
         TW_rashod->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
         TW_rashod->setHorizontalHeaderItem(5, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        TW_rashod->setHorizontalHeaderItem(6, __qtablewidgetitem6);
         TW_rashod->setObjectName(QString::fromUtf8("TW_rashod"));
         TW_rashod->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         TW_rashod->horizontalHeader()->setCascadingSectionResizes(false);
@@ -146,17 +148,19 @@ public:
         PB_reset->setText(QCoreApplication::translate("W_rashod", "\320\241\320\261\321\200\320\276\321\201\320\270\321\202\321\214", nullptr));
         L_title->setText(QCoreApplication::translate("W_rashod", "\320\240\320\260\321\201\321\205\320\276\320\264", nullptr));
         QTableWidgetItem *___qtablewidgetitem = TW_rashod->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QCoreApplication::translate("W_rashod", "\320\277\321\200\320\276\320\264\321\203\320\272\321\202", nullptr));
+        ___qtablewidgetitem->setText(QCoreApplication::translate("W_rashod", "id", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = TW_rashod->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QCoreApplication::translate("W_rashod", "\320\264\320\260\321\202\320\260", nullptr));
+        ___qtablewidgetitem1->setText(QCoreApplication::translate("W_rashod", "\320\277\321\200\320\276\320\264\321\203\320\272\321\202", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = TW_rashod->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("W_rashod", "\320\272\320\276\320\273-\320\262\320\276", nullptr));
+        ___qtablewidgetitem2->setText(QCoreApplication::translate("W_rashod", "\320\264\320\260\321\202\320\260", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = TW_rashod->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("W_rashod", "\320\270\320\264. \320\230\320\267\320\274\320\265\321\200\320\265\320\275\320\270\321\217", nullptr));
+        ___qtablewidgetitem3->setText(QCoreApplication::translate("W_rashod", "\320\272\320\276\320\273-\320\262\320\276", nullptr));
         QTableWidgetItem *___qtablewidgetitem4 = TW_rashod->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QCoreApplication::translate("W_rashod", "\321\206\320\265\320\275\320\260", nullptr));
+        ___qtablewidgetitem4->setText(QCoreApplication::translate("W_rashod", "\320\270\320\264. \320\230\320\267\320\274\320\265\321\200\320\265\320\275\320\270\321\217", nullptr));
         QTableWidgetItem *___qtablewidgetitem5 = TW_rashod->horizontalHeaderItem(5);
-        ___qtablewidgetitem5->setText(QCoreApplication::translate("W_rashod", "\320\236\321\202\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\275\320\276", nullptr));
+        ___qtablewidgetitem5->setText(QCoreApplication::translate("W_rashod", "\321\206\320\265\320\275\320\260", nullptr));
+        QTableWidgetItem *___qtablewidgetitem6 = TW_rashod->horizontalHeaderItem(6);
+        ___qtablewidgetitem6->setText(QCoreApplication::translate("W_rashod", "\320\236\321\202\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\275\320\276", nullptr));
     } // retranslateUi
 
 };

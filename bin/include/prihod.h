@@ -98,8 +98,8 @@ public:
         verticalLayout->addWidget(F_tipPanel);
 
         TW_prihod = new QTableWidget(W_prihod);
-        if (TW_prihod->columnCount() < 6)
-            TW_prihod->setColumnCount(6);
+        if (TW_prihod->columnCount() < 7)
+            TW_prihod->setColumnCount(7);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         TW_prihod->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
@@ -112,6 +112,8 @@ public:
         TW_prihod->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
         TW_prihod->setHorizontalHeaderItem(5, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        TW_prihod->setHorizontalHeaderItem(6, __qtablewidgetitem6);
         TW_prihod->setObjectName(QString::fromUtf8("TW_prihod"));
         TW_prihod->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         TW_prihod->horizontalHeader()->setCascadingSectionResizes(false);
@@ -135,17 +137,19 @@ public:
         PB_find->setText(QCoreApplication::translate("W_prihod", "\320\235\320\260\320\271\321\202\320\270", nullptr));
         PB_delete->setText(QCoreApplication::translate("W_prihod", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214", nullptr));
         QTableWidgetItem *___qtablewidgetitem = TW_prihod->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QCoreApplication::translate("W_prihod", "\320\277\321\200\320\276\320\264\321\203\320\272\321\202", nullptr));
+        ___qtablewidgetitem->setText(QCoreApplication::translate("W_prihod", "id", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = TW_prihod->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QCoreApplication::translate("W_prihod", "\320\264\320\260\321\202\320\260", nullptr));
+        ___qtablewidgetitem1->setText(QCoreApplication::translate("W_prihod", "\320\277\321\200\320\276\320\264\321\203\320\272\321\202", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = TW_prihod->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("W_prihod", "\320\272\320\276\320\273-\320\262\320\276", nullptr));
+        ___qtablewidgetitem2->setText(QCoreApplication::translate("W_prihod", "\320\264\320\260\321\202\320\260", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = TW_prihod->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("W_prihod", "\320\270\320\264. \320\230\320\267\320\274\320\265\321\200\320\265\320\275\320\270\321\217", nullptr));
+        ___qtablewidgetitem3->setText(QCoreApplication::translate("W_prihod", "\320\272\320\276\320\273-\320\262\320\276", nullptr));
         QTableWidgetItem *___qtablewidgetitem4 = TW_prihod->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QCoreApplication::translate("W_prihod", "\321\206\320\265\320\275\320\260", nullptr));
+        ___qtablewidgetitem4->setText(QCoreApplication::translate("W_prihod", "\320\270\320\264. \320\230\320\267\320\274\320\265\321\200\320\265\320\275\320\270\321\217", nullptr));
         QTableWidgetItem *___qtablewidgetitem5 = TW_prihod->horizontalHeaderItem(5);
-        ___qtablewidgetitem5->setText(QCoreApplication::translate("W_prihod", "\320\277\320\276\321\201\321\202\320\260\320\262\321\211\320\270\320\272", nullptr));
+        ___qtablewidgetitem5->setText(QCoreApplication::translate("W_prihod", "\321\206\320\265\320\275\320\260", nullptr));
+        QTableWidgetItem *___qtablewidgetitem6 = TW_prihod->horizontalHeaderItem(6);
+        ___qtablewidgetitem6->setText(QCoreApplication::translate("W_prihod", "\320\277\320\276\321\201\321\202\320\260\320\262\321\211\320\270\320\272", nullptr));
     } // retranslateUi
 
 };
