@@ -1,16 +1,14 @@
 #include <fileManager.h>
 #include <fstream>
 #include <iostream>
-#include <iterator>
 #include <ostream>
 #include <qcontainerfwd.h>
 #include <qlogging.h>
 #include <string>
 #include <vector>
 
-#define DATA_SIZE 100
 
-
+int FM::primaryKey = -1;
 std::string FM::currentPath = std::filesystem::current_path().string();
 std::string FM::currentFile = std::filesystem::current_path().string()+"/save/save.json";
 void FM::addProduct(QString name , QString data , QString price 
@@ -45,7 +43,8 @@ void FM::addProduct(QString name , QString data , QString price
 
         json prihod = json::array();
         prihod.push_back(
-                {{"data" , Sdata} ,
+                {{"id" , getPrimaryKey()+1},
+                {"data" , Sdata} ,
                 {"price" , Sprice} ,
                 {"count" , Scount},
                     {"unit" , Sunit}, 
@@ -87,7 +86,8 @@ void FM::addProduct(std::string name , std::string data , std::string price
 
         json prihod = json::array();
         prihod.push_back(
-                {{"data" , data} ,
+                { {"id" , getPrimaryKey()+1}, 
+                {"data" , data} ,
                 {"price" , price} ,
                 {"count" , count},
                     {"unit" , unit}, 
@@ -128,6 +128,7 @@ bool FM::pushPrihod(QString name, QString count,QString unit ,QString  data , QS
         {
             product["prihod"][0].push_back(
             {
+                    {"id" , getPrimaryKey()+1},
                 {"data", Sdata},
                 {"price", Sprice},
                 {"count", Scount},
@@ -169,6 +170,7 @@ bool FM::pushRashod(QString name, QString count,QString unit ,QString  data , QS
         {
             json newPrihod = 
             {
+                    {"id" , getPrimaryKey()+1},
                 {"data" , Sdata},
                 {"price" , Sprice},
                 {"count", Scount},
@@ -255,14 +257,12 @@ std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
     std::vector<dataItem> table ; 
     for (auto& product : js)
     {
-        int point = 0 ;
-        dataItem items[DATA_SIZE] ;  
         for (auto& prihodArray : product["prihod"])
         {
             for(auto& prihodItem : prihodArray)
             { 
             // 0 this is PRIHOD macros for guiController
-                table.push_back({0 ,product["name"] ,
+                table.push_back({0 ,getPrimaryKey(),product["name"] ,
                         prihodItem["data"] , prihodItem["unit"] , prihodItem["count"],
                         prihodItem["price"] , prihodItem["suplier"]
                         });
@@ -275,7 +275,7 @@ std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
                 if (rashodItem.is_object())
                 {
                 // 2 this is RASHOD for guiController
-                table.push_back({2 ,product["name"] ,
+                table.push_back({2 ,getPrimaryKey(),product["name"] ,
                      rashodItem["data"] , rashodItem["unit"] , rashodItem["count"],
                         rashodItem["price"] , rashodItem["suplier"]
                         });
@@ -301,7 +301,6 @@ void FM::removeElement(QString name  , int typeTable, QString data , QString cou
     Scount = count.toStdString();
     Sprice = price.toStdString();
    
-    std::cout << "run delete" << std::endl; 
     json js;
     std::fstream outFile(currentFile);
     outFile >> js;
@@ -356,4 +355,46 @@ void FM::removeElement(QString name  , int typeTable, QString data , QString cou
         }
     }
     
+}
+int FM::getPrimaryKey()
+{
+    if (fileIsEmpty(currentFile))
+    {
+        return -1;
+    }
+    if (primaryKey != -1)
+    {
+        return primaryKey;
+    }
+    json js;
+    std::fstream outFile(currentFile);
+    outFile >> js;
+    outFile.close();
+    int max = 0;
+    for (auto& product : js)
+    {
+        for (auto& prihodArray : product["prihod"])
+        {
+            for(auto& prihodItem : prihodArray)
+            { 
+                if (prihodItem["id"] > max)
+                {
+                    max = prihodItem["id"];
+                }        
+            }
+        }
+        for (auto& rashodArray : product["rashod"])
+        {
+            for (auto& rashodItem : rashodArray)
+            { 
+                if (rashodItem["id"] > max)
+                {
+                    max = rashodItem["id"];
+                }        
+            }
+        }
+
+    }
+    primaryKey = max+1;
+    return primaryKey;
 }

@@ -66,12 +66,13 @@ void gui::docuGuiController::loadFile()
         }
         int rows = table->rowCount();
         table->insertRow(rows);
-        table->setItem(rows, 0, new QTableWidgetItem(QString::fromStdString(data.name)));
-        table->setItem(rows , 1 , new QTableWidgetItem(QString::fromStdString(data.data)));
-        table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.count)));
-        table->setItem(rows,3 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
-        table->setItem(rows, 4 , new QTableWidgetItem(QString::fromStdString(data.price)));
-        table->setItem(rows,5 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
+        table->setItem(rows, 0, new QTableWidgetItem(QString::number(FM::getPrimaryKey())));
+        table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
+        table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
+        table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
+        table->setItem(rows,4 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
+        table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
+        table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
     }
 }
 bool gui::docuGuiController::startGui()
@@ -340,12 +341,13 @@ void gui::docuGuiController:: addElement()
     }
     int rows = table->rowCount()  ; 
     table->insertRow(rows);
-    table->setItem(rows, 0 , new QTableWidgetItem(uiAdd->LE_name->text()));
-    table->setItem(rows , 1 , new QTableWidgetItem(uiAdd->DE_data->text()));
-    table->setItem(rows , 2 , new QTableWidgetItem(uiAdd->LE_count->text()));
-    table->setItem(rows,3 , new QTableWidgetItem(uiAdd->LE_unit->text())); 
-    table->setItem(rows, 4 , new QTableWidgetItem(uiAdd->LE_price->text()));
-    table->setItem(rows,5 , new QTableWidgetItem(uiAdd->LE_suplier->text()));
+    table->setItem(rows, 0 , new QTableWidgetItem(QString::number(FM::getPrimaryKey())));
+    table->setItem(rows, 1 , new QTableWidgetItem(uiAdd->LE_name->text()));
+    table->setItem(rows , 2 , new QTableWidgetItem(uiAdd->DE_data->text()));
+    table->setItem(rows , 3 , new QTableWidgetItem(uiAdd->LE_count->text()));
+    table->setItem(rows,4 , new QTableWidgetItem(uiAdd->LE_unit->text())); 
+    table->setItem(rows, 5 , new QTableWidgetItem(uiAdd->LE_price->text()));
+    table->setItem(rows,6 , new QTableWidgetItem(uiAdd->LE_suplier->text()));
 }
 void gui::docuGuiController:: findElement()
 {

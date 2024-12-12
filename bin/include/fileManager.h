@@ -8,7 +8,6 @@
 #include <QString>
 
 
-#define DATA_SIZE 100
 
 using json = nlohmann::json;
 
@@ -17,6 +16,7 @@ namespace FM {
 struct dataItem
 {
     int typeTable = -1;
+    int id = -1;
     std::string name = "Undefined";
     std::string data = "Undefined";
     std::string unit = "Undefined";
@@ -25,7 +25,7 @@ struct dataItem
     std::string suplier = "Undefined";
 };
 
-
+extern int primaryKey;
 extern std::string currentPath  ;
 
 extern std::ofstream lastFile;
@@ -49,6 +49,7 @@ bool findFile( const std::string& path);
 bool createFile(const std::string& path);
 bool setCurentPath(const std::string& path);
 bool fileIsEmpty(const std::string& path);
+int getPrimaryKey();
 }
 
 #endif
