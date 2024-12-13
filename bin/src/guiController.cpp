@@ -66,7 +66,7 @@ void gui::docuGuiController::loadFile()
         }
         int rows = table->rowCount();
         table->insertRow(rows);
-        table->setItem(rows, 0, new QTableWidgetItem(QString::number(FM::getPrimaryKey())));
+        table->setItem(rows, 0, new QTableWidgetItem(QString::number(data.id)));
         table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
         table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
         table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
@@ -282,11 +282,7 @@ void gui::docuGuiController::delElement()
 
    for (int i : sorted)
    {
-       qDebug() << "remove element";
-       table->item(i , 0)->text(); 
-       FM::removeElement(table->item(i , 0)->text(),isActive,
-               table->item(i, 1)->text(),
-               table->item(i, 2)->text() , table->item(i, 4)->text());
+       FM::removeElement(table->item(i , 0)->text().toInt() , isActive);
        table->removeRow(i);
    }
 
@@ -341,7 +337,7 @@ void gui::docuGuiController:: addElement()
     }
     int rows = table->rowCount()  ; 
     table->insertRow(rows);
-    table->setItem(rows, 0 , new QTableWidgetItem(QString::number(FM::getPrimaryKey())));
+    table->setItem(rows, 0 , new QTableWidgetItem(QString::number(FM::newPrimaryKey())));
     table->setItem(rows, 1 , new QTableWidgetItem(uiAdd->LE_name->text()));
     table->setItem(rows , 2 , new QTableWidgetItem(uiAdd->DE_data->text()));
     table->setItem(rows , 3 , new QTableWidgetItem(uiAdd->LE_count->text()));

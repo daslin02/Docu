@@ -262,7 +262,7 @@ std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
             for(auto& prihodItem : prihodArray)
             { 
             // 0 this is PRIHOD macros for guiController
-                table.push_back({0 ,getPrimaryKey(),product["name"] ,
+                table.push_back({0 ,prihodItem["id"],product["name"] ,
                         prihodItem["data"] , prihodItem["unit"] , prihodItem["count"],
                         prihodItem["price"] , prihodItem["suplier"]
                         });
@@ -275,7 +275,7 @@ std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
                 if (rashodItem.is_object())
                 {
                 // 2 this is RASHOD for guiController
-                table.push_back({2 ,getPrimaryKey(),product["name"] ,
+                table.push_back({2 ,rashodItem["id"],product["name"] ,
                      rashodItem["data"] , rashodItem["unit"] , rashodItem["count"],
                         rashodItem["price"] , rashodItem["suplier"]
                         });
@@ -288,73 +288,40 @@ std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
     return table;
 }
 
-void FM::removeElement(QString name  , int typeTable, QString data , QString count , QString price)
+void FM::removeElement(int id , int typeTable)
 {
     
     if (fileIsEmpty(currentFile))
     {
         return;
     }
-    std::string Sname ,Sdata , Scount , Sprice;
-    Sname = name.toStdString();
-    Sdata = data.toStdString();
-    Scount = count.toStdString();
-    Sprice = price.toStdString();
    
     json js;
     std::fstream outFile(currentFile);
     outFile >> js;
     outFile.close();
     int point = 0;
-    if (typeTable == 0) // 0 this is PRIHOD for guiController
+    std::string table = "prihod" ;
+    if (typeTable == 2 ) {table = "rashod";}
+   
+    std::ofstream file(currentFile);
+    for (auto& product : js)
     {
-        for (auto& product : js)
-        {
-            if(product["name"] == Sname )
+       if (product[table][0].size() > 0 )
+       { 
+           for (auto& arr : product[table][0] )
             {
-               if (product["prihod"][0].size() >= 1)
-               { 
-                for (auto& arr : product["prihod"][0] )
-                    {
-                        if (arr["data"] == Sdata && arr["count"] == Scount && arr["price"] == Sprice)
-                        {
-                            product["prihod"][0].erase(point);
-                            std::ofstream file(currentFile);
-                            file << js.dump(4);
-                            file.close();
-                            return;
-                        }
-                    }
-               } 
+                if (arr["id"] == id)
+                {
+                    product[table][0].erase(point);
+                    file << js.dump(4);
+                    file.close();
+                    return;
+                }
+                point++;
             }
-            point++;
-        }
+       } 
     }
-    else
-    {
-        for (auto& product : js)
-        {
-            if(product["name"] == Sname )
-            {
-               if (product["rashod"][0].size() >= 1)
-               {
-                    for (auto& arr : product["rashod"][0] )
-                    {
-                        if (arr["data"] == Sdata && arr["count"] == Scount && arr["price"] == Sprice)
-                        {
-                            product["rashod"][0].erase(point);
-                            std::ofstream file(currentFile);
-                            file << js.dump(4);
-                            file.close();
-                            return;
-                        }
-                    } 
-               }
-               point++;
-            }    
-        }
-    }
-    
 }
 int FM::getPrimaryKey()
 {
@@ -396,5 +363,10 @@ int FM::getPrimaryKey()
 
     }
     primaryKey = max+1;
+    return primaryKey;
+}
+int FM::newPrimaryKey()
+{
+    FM::primaryKey++;
     return primaryKey;
 }
