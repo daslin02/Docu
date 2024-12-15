@@ -10,6 +10,7 @@
 #include <qsize.h>
 #include <qstandarditemmodel.h>
 #include <qtablewidget.h>
+#include <qtabwidget.h>
 #include <qthread.h>
 #include <qvariant.h>
 #include <qwidget.h>
@@ -62,6 +63,7 @@ public slots:
    void addElement();
    void delElement();
    void findElement();
+   void resetFind();
    void replaceElement();
 private :
     QWidget* prihod;
@@ -80,7 +82,7 @@ private :
     QWidget* dialogFind;
     Ui::browserWidget* uiFind;
    
-    
+
     QMutex* PointOverlay;
     Overlay* findOverlay;
     Overlay* addOverlay;

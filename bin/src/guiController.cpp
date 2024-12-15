@@ -5,15 +5,9 @@
 #include "prihodWidget.h"
 #include "rashod.h"
 #include <guiController.h>
-#include <fileManager.h>
-#include <qcontainerfwd.h>
-#include <qdebug.h>
-#include <qlogging.h>
-#include <qobject.h>
-#include <qtablewidget.h>
-#include <qthread.h>
+#include <qpushbutton.h>
 #include <vector>
-
+#include <fileManager.h>
 
 
 gui::docuGuiController::docuGuiController(QMainWindow* parent) : QMainWindow(parent)
@@ -191,6 +185,10 @@ void gui::docuGuiController::runAllEvent()
 
     connect(uiFind->PB_find , &QPushButton::clicked , this , &docuGuiController::findElement);
     connect(uiFind->PB_replace , &QPushButton::clicked , this , &docuGuiController::replaceElement);
+    //reset Find
+    connect(UiPrihod->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
+    connect(UiRashod->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
+    connect(UiOstatok->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
 }
     
 void gui::docuGuiController::showDialogPrihod()
@@ -287,6 +285,83 @@ void gui::docuGuiController::delElement()
    }
 
 }
+void gui::docuGuiController::resetFind()
+{
+
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        table = UiOstatok->TW_ostatok;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
+    if(isActive != OSTATOK)
+    {
+        table->setRowCount(0);
+        std::vector<FM::dataItem> datas = FM::loadTable(isActive);
+        for (FM::dataItem data : datas)
+        {
+        int rows = table->rowCount();       
+        table->insertRow(rows);
+        table->setItem(rows, 0, new QTableWidgetItem(QString::number(data.id)));
+        table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
+        table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
+        table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
+        table->setItem(rows,4 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
+        table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
+        table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
+        }
+    }
+    else 
+    {
+
+    }
+}
+void gui::docuGuiController:: findElement()
+{
+    if (uiFind->LE_find->text().isEmpty()) 
+    {
+        return ; 
+    }
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        table = UiOstatok->TW_ostatok;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
+    if(isActive != OSTATOK)
+    {
+        std::vector<FM::dataItem> datas = FM::findElement(uiFind->LE_find->text().toStdString(), isActive);   
+        table->setRowCount(0); 
+        for (FM::dataItem data : datas)
+        {
+           int rows = table->rowCount();       
+           table->insertRow(rows);
+            table->setItem(rows, 0, new QTableWidgetItem(QString::number(data.id)));
+            table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
+            table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
+            table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
+            table->setItem(rows,4 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
+            table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
+            table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
+        }
+    }
+    else
+    {
+    
+    }
+}
 void gui::docuGuiController:: addElement()
 {
     if (!isFullValue())
@@ -305,9 +380,9 @@ void gui::docuGuiController:: addElement()
          table = UiRashod->TW_rashod;
          break;
     }
+    std::vector<FM::dataItem> isFind = FM::findElement(uiAdd->LE_name->text().toStdString() , -1);
     
-    bool isFind = FM::findElement((FM::currentPath+"/save/save.json") ,  uiAdd->LE_name->text().toStdString());
-    if(isFind)
+    if(isFind.size() > 0)
     {
         if(isActive==PRIHOD)
         {
@@ -344,25 +419,12 @@ void gui::docuGuiController:: addElement()
     table->setItem(rows,4 , new QTableWidgetItem(uiAdd->LE_unit->text())); 
     table->setItem(rows, 5 , new QTableWidgetItem(uiAdd->LE_price->text()));
     table->setItem(rows,6 , new QTableWidgetItem(uiAdd->LE_suplier->text()));
-}
-void gui::docuGuiController:: findElement()
-{
-    if (uiFind->LE_find->text().isEmpty()) 
-    {
-        return ; 
-    }
-    QTableWidget* table;
-    switch (isActive) {
-    case PRIHOD:
-        table = UiPrihod->TW_prihod;  
-        break;
-    case OSTATOK:
-        return;
-        break;
-    case RASHOD:
-         table = UiRashod->TW_rashod;
-         break;
-    }
+
+    // remove value in lineEditor
+    uiAdd->LE_name->clear();
+    uiAdd->LE_count->clear();
+    uiAdd->LE_price->clear();
+    uiAdd->LE_suplier->clear();
 }
 void gui::docuGuiController:: replaceElement()
 {

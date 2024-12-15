@@ -84,6 +84,17 @@ font-weight:bold;</string>
         </property>
        </widget>
       </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="PB_reset">
+        <property name="styleSheet">
+         <string notr="true">font-size:15px;
+font-weight:bold;</string>
+        </property>
+        <property name="text">
+         <string>Сбросить</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -108,17 +119,22 @@ font-weight:bold;</string>
      </column>
      <column>
       <property name="text">
-       <string>кол-во</string>
+       <string>Дата</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>ид. Измерения</string>
+       <string>всего Прихода</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>цена</string>
+       <string>Всего расхода</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Остаток</string>
       </property>
      </column>
     </widget>

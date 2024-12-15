@@ -208,36 +208,75 @@ bool FM::findFile(const std::string& path)
 bool FM::createFile(const std::string& path)
 {
     std::ofstream file(path);
-    if (!file)
+    if (!file.is_open())
     {
         std::cerr << "error is open " << std::endl;
+        file.close();
         return false ; 
     }
     file.close();
-
     return FM::findFile(path) ; 
 }
 
-bool FM::findElement(const std::string& path , std::string name)
+std::vector<FM::dataItem> FM::findElement( std::string element , int typeTable)
 {
-   if (!path.empty())
-   { 
+    std::vector<dataItem> data;
     json js ;
-    std::ifstream outfile(path);
-    if (!fileIsEmpty(path))
+    std::ifstream outfile(currentFile);
+    if (!fileIsEmpty(currentFile))
     {
         outfile >> js ; 
     }
+    std::string table = "prihod";
+    if(typeTable == 2) {table = "rashod";} 
     outfile.close();
     for (const auto& product : js)
     {
-        if (product["name"] == name)
-        {
-            return true;
-        }
+       for(auto& arr_product : product[table])
+       {
+           for (auto& arr : arr_product)
+           {
+                if (element == arr["count"])
+                {
+                    data.push_back({typeTable , arr["id"] , product["name"] , arr["data"],
+                            arr["unit"] , arr["count"] , arr["price"] , arr["suplier"]
+                            });
+                }
+                else if(element == product["name"])
+                {
+                    data.push_back({typeTable , arr["id"] , product["name"] , arr["data"],
+                            arr["unit"] , arr["count"] , arr["price"] , arr["suplier"]
+                            });
+                }
+                else if (element == arr["suplier"])
+                {
+                    data.push_back({typeTable , arr["id"] , product["name"] , arr["data"],
+                            arr["unit"] , arr["count"] , arr["price"] , arr["suplier"]
+                            });
+
+                }
+                else if (element == arr["price"]) 
+                {
+                    data.push_back({typeTable , arr["id"] , product["name"] , arr["data"],
+                            arr["unit"] , arr["count"] , arr["price"] , arr["suplier"]
+                            });
+                }
+                else if (element == arr["data"])
+                {
+                    data.push_back({typeTable , arr["id"] , product["name"] , arr["data"],
+                            arr["unit"] , arr["count"] , arr["price"] , arr["suplier"]
+                            });
+                }
+                else if(element == arr["unit"])
+                {
+                    data.push_back({typeTable , arr["id"] , product["name"] , arr["data"],
+                            arr["unit"] , arr["count"] , arr["price"] , arr["suplier"]
+                            });
+                }
+           }
+       }
     }
-   }
-   return false;
+   return data;
 }
 bool FM::setCurentPath(const std::string &path)
 {
@@ -248,39 +287,46 @@ bool FM::setCurentPath(const std::string &path)
     }   
    return false; 
 }
-std::vector<FM::dataItem> FM::loadTable() // laod data from jsonFile
+std::vector<FM::dataItem> FM::loadTable(int typeTable) // laod data from jsonFile
 {    
     json js ;
     std::ifstream outfile(currentFile);
     outfile >> js ; 
     outfile.close(); 
-    std::vector<dataItem> table ; 
+    std::vector<dataItem> table ;
     for (auto& product : js)
     {
-        for (auto& prihodArray : product["prihod"])
+        if (typeTable == -1 || typeTable == 0 ) // full or prihod 0 is this priho
         {
-            for(auto& prihodItem : prihodArray)
-            { 
-            // 0 this is PRIHOD macros for guiController
-                table.push_back({0 ,prihodItem["id"],product["name"] ,
-                        prihodItem["data"] , prihodItem["unit"] , prihodItem["count"],
-                        prihodItem["price"] , prihodItem["suplier"]
-                        });
+            for (auto& prihodArray : product["prihod"])
+            {
+                for(auto& prihodItem : prihodArray)
+                { 
+                // 0 this is PRIHOD macros for guiController
+                    table.push_back({0 ,prihodItem["id"],product["name"] ,
+                            prihodItem["data"] , prihodItem["unit"] , prihodItem["count"],
+                            prihodItem["price"] , prihodItem["suplier"]
+                            });
+                }
             }
         }
-        for (auto& rashodArray : product["rashod"])
+        if(typeTable == -1 || typeTable == 2)
         {
-            for (auto& rashodItem : rashodArray)
-            {
-                if (rashodItem.is_object())
-                {
-                // 2 this is RASHOD for guiController
-                table.push_back({2 ,rashodItem["id"],product["name"] ,
-                     rashodItem["data"] , rashodItem["unit"] , rashodItem["count"],
-                        rashodItem["price"] , rashodItem["suplier"]
-                        });
             
-                }      
+            for (auto& rashodArray : product["rashod"])
+            {
+                for (auto& rashodItem : rashodArray)
+                {
+                    if (rashodItem.is_object())
+                    {
+                    // 2 this is RASHOD for guiController
+                    table.push_back({2 ,rashodItem["id"],product["name"] ,
+                         rashodItem["data"] , rashodItem["unit"] , rashodItem["count"],
+                            rashodItem["price"] , rashodItem["suplier"]
+                            });
+            
+                     }      
+                }
             }
         }
 
