@@ -14,11 +14,12 @@ std::string FM::currentFile = std::filesystem::current_path().string()+"/save/sa
 void FM::addProduct(QString name , QString data , QString price 
         , QString unit , QString count , QString suplier)
 {
-    std::string Sname ,Sdata , Sunit , Scount , Sprice , Ssuplier;
+    std::string Sname ,Sdata , Sunit , Sprice , Ssuplier;
+    int Scount;
     Sname = name.toStdString();
     Sdata = data.toStdString();
     Sunit = unit.toStdString();
-    Scount = count.toStdString();
+    Scount = count.toInt();
     Sprice = price.toStdString();
     Ssuplier = suplier.toStdString();
 
@@ -106,11 +107,12 @@ void FM::addProduct(std::string name , std::string data , std::string price
 }
 bool FM::pushPrihod(QString name, QString count,QString unit ,QString  data , QString price , QString suplier)
 {
-    std::string Sname , Sdata , Sunit , Scount , Sprice , Ssuplier;
+    std::string Sname , Sdata , Sunit , Sprice , Ssuplier;
+    int Scount;
     Sname = name.toStdString();
     Sdata = data.toStdString(); 
     Sunit= unit.toStdString();
-    Scount = count.toStdString();
+    Scount = count.toInt();
     Sprice = price.toStdString();
     Ssuplier = suplier.toStdString();
 
@@ -148,11 +150,12 @@ bool FM::pushPrihod(QString name, QString count,QString unit ,QString  data , QS
 
 bool FM::pushRashod(QString name, QString count,QString unit ,QString  data , QString price , QString suplier)
 {
-    std::string Sname , Sdata , Sunit , Scount , Sprice , Ssuplier;
+    std::string Sname , Sdata , Sunit ,  Sprice , Ssuplier;
+    int Scount;
     Sname = name.toStdString();
     Sdata = data.toStdString(); 
     Sunit= unit.toStdString();
-    Scount = count.toStdString();
+    Scount = count.toInt();
     Sprice = price.toStdString();
     Ssuplier = suplier.toStdString();
 
@@ -287,7 +290,7 @@ bool FM::setCurentPath(const std::string &path)
     }   
    return false; 
 }
-std::vector<FM::dataItem> FM::loadTable(int typeTable) // laod data from jsonFile
+std::vector<FM::dataItem> FM::loadTable(int typeTable) // load data from jsonFile
 {    
     json js ;
     std::ifstream outfile(currentFile);
@@ -415,4 +418,55 @@ int FM::newPrimaryKey()
 {
     FM::primaryKey++;
     return primaryKey;
+}
+std::vector<FM::analizeData> FM::analize()
+{
+    std::vector<FM::analizeData> data ;
+    if (fileIsEmpty(currentFile))
+    {
+        return data;
+    }
+    json js;
+    std::fstream outFile(currentFile);
+    outFile >> js;
+    outFile.close();
+    int surplus = 0 ;
+    std::string currentData = "";
+    for (auto& product : js)
+    {
+       for (auto& arr : product["prihod"][0])
+       {
+            bool isFind = false;
+            for (analizeData i : data)
+            {
+                if(i.data == arr["data"])
+                {
+                    isFind = true;
+                    i.surplus += arr["count"].get<int>();
+                }
+            }
+            if (!isFind)
+            {
+                data.push_back({product["name"] , arr["data"] , arr["count"] , arr["unit"]}); 
+            }
+       }
+       for (auto& arr : product["rashod"][0])
+       {
+        
+            bool isFind = false;
+            for (analizeData i : data)
+            {
+                if(i.data == arr["data"])
+                {
+                    isFind = true;
+                    i.surplus -= arr["count"].get<int>();
+                }
+            }
+            if (!isFind)
+            {
+                data.push_back({product["name"] , arr["data"] , arr["count"] , arr["unit"]}); 
+            }
+       }
+    }
+    return data;
 }

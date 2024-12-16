@@ -21,9 +21,16 @@ struct dataItem
     std::string name = "Undefined";
     std::string data = "Undefined";
     std::string unit = "Undefined";
-    std::string count = "Undefined";
+    int count = 0;
     std::string price = "Undefined";
     std::string suplier = "Undefined";
+};
+struct analizeData
+{
+    std::string name ;
+    std::string data;
+    int surplus = 0;
+    std::string unit;
 };
 
 extern int primaryKey;
@@ -44,6 +51,7 @@ bool pushPrihod(QString name,QString count, QString unit ,QString  data , QStrin
 bool pushRashod(QString name,QString count ,QString unit ,QString  data , QString price , QString suplier);;
 void removeElement(int id , int typetable);
 std::vector<FM::dataItem> loadTable(int typetable = -1);
+std::vector<FM::analizeData> analize();
 bool findFile( const std::string& path);
 bool createFile(const std::string& path);
 bool setCurentPath(const std::string& path);

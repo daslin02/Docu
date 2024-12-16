@@ -5,7 +5,10 @@
 #include "prihodWidget.h"
 #include "rashod.h"
 #include <guiController.h>
+#include <qcontainerfwd.h>
+#include <qlogging.h>
 #include <qpushbutton.h>
+#include <qtablewidget.h>
 #include <vector>
 #include <fileManager.h>
 
@@ -45,6 +48,7 @@ gui::docuGuiController::~docuGuiController()
     delete ostatok;
     delete UiOstatok;
 }
+
 void gui::docuGuiController::loadFile()
 {
     std::vector<FM::dataItem> dates = FM::loadTable();
@@ -63,7 +67,7 @@ void gui::docuGuiController::loadFile()
         table->setItem(rows, 0, new QTableWidgetItem(QString::number(data.id)));
         table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
         table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
-        table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
+        table->setItem(rows , 3 , new QTableWidgetItem(QString::number(data.count)));
         table->setItem(rows,4 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
         table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
         table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
@@ -189,6 +193,8 @@ void gui::docuGuiController::runAllEvent()
     connect(UiPrihod->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
     connect(UiRashod->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
     connect(UiOstatok->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
+//connect analizate
+    connect(UiOstatok->PB_analize , &QPushButton::clicked , this , &docuGuiController::analize);
 }
     
 void gui::docuGuiController::showDialogPrihod()
@@ -311,7 +317,7 @@ void gui::docuGuiController::resetFind()
         table->setItem(rows, 0, new QTableWidgetItem(QString::number(data.id)));
         table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
         table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
-        table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
+        table->setItem(rows , 3 , new QTableWidgetItem(QString::number(data.count)));
         table->setItem(rows,4 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
         table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
         table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
@@ -351,7 +357,7 @@ void gui::docuGuiController:: findElement()
             table->setItem(rows, 0, new QTableWidgetItem(QString::number(data.id)));
             table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.name)));
             table->setItem(rows , 2 , new QTableWidgetItem(QString::fromStdString(data.data)));
-            table->setItem(rows , 3 , new QTableWidgetItem(QString::fromStdString(data.count)));
+            table->setItem(rows , 3 , new QTableWidgetItem(QString::number(data.count)));
             table->setItem(rows,4 , new QTableWidgetItem(QString::fromStdString(data.unit))); 
             table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
             table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
@@ -360,6 +366,21 @@ void gui::docuGuiController:: findElement()
     else
     {
     
+    }
+}
+void gui::docuGuiController::analize()
+{
+    QTableWidget* table = UiOstatok->TW_ostatok;
+    std::vector<FM::analizeData> datas = FM::analize();
+    table->setRowCount(0);
+    for (FM::analizeData data : datas)
+    {
+        int rows = table->rowCount();
+        table->insertRow(rows);
+        table->setItem(rows, 0, new QTableWidgetItem(QString::fromStdString(data.name)));
+        table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.data)));
+        table->setItem(rows, 2, new QTableWidgetItem(QString::number(data.surplus)));
+        table->setItem(rows, 3, new QTableWidgetItem(QString::fromStdString(data.unit)));
     }
 }
 void gui::docuGuiController:: addElement()

@@ -89,8 +89,8 @@ public:
         verticalLayout->addWidget(F_tipPanel);
 
         TW_ostatok = new QTableWidget(W_ostatok);
-        if (TW_ostatok->columnCount() < 5)
-            TW_ostatok->setColumnCount(5);
+        if (TW_ostatok->columnCount() < 4)
+            TW_ostatok->setColumnCount(4);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         TW_ostatok->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
@@ -99,8 +99,6 @@ public:
         TW_ostatok->setHorizontalHeaderItem(2, __qtablewidgetitem2);
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
         TW_ostatok->setHorizontalHeaderItem(3, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        TW_ostatok->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         TW_ostatok->setObjectName(QString::fromUtf8("TW_ostatok"));
         TW_ostatok->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         TW_ostatok->horizontalHeader()->setCascadingSectionResizes(false);
@@ -127,11 +125,9 @@ public:
         QTableWidgetItem *___qtablewidgetitem1 = TW_ostatok->horizontalHeaderItem(1);
         ___qtablewidgetitem1->setText(QCoreApplication::translate("W_ostatok", "\320\224\320\260\321\202\320\260", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = TW_ostatok->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("W_ostatok", "\320\262\321\201\320\265\320\263\320\276 \320\237\321\200\320\270\321\205\320\276\320\264\320\260", nullptr));
+        ___qtablewidgetitem2->setText(QCoreApplication::translate("W_ostatok", "\320\236\321\201\321\202\320\260\321\202\320\276\320\272", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = TW_ostatok->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("W_ostatok", "\320\222\321\201\320\265\320\263\320\276 \321\200\320\260\321\201\321\205\320\276\320\264\320\260", nullptr));
-        QTableWidgetItem *___qtablewidgetitem4 = TW_ostatok->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QCoreApplication::translate("W_ostatok", "\320\236\321\201\321\202\320\260\321\202\320\276\320\272", nullptr));
+        ___qtablewidgetitem3->setText(QCoreApplication::translate("W_ostatok", "\320\270\320\267\320\274\320\265\321\200\320\265\320\275\320\270\320\265", nullptr));
     } // retranslateUi
 
 };

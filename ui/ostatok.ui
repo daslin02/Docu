@@ -124,17 +124,12 @@ font-weight:bold;</string>
      </column>
      <column>
       <property name="text">
-       <string>всего Прихода</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Всего расхода</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
        <string>Остаток</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>измерение</string>
       </property>
      </column>
     </widget>

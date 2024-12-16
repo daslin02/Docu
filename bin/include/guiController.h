@@ -65,6 +65,7 @@ public slots:
    void findElement();
    void resetFind();
    void replaceElement();
+   void analize();
 private :
     QWidget* prihod;
     Ui::W_prihod* UiPrihod;
