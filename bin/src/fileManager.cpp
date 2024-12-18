@@ -291,7 +291,7 @@ bool FM::setCurentPath(const std::string &path)
    return false; 
 }
 std::vector<FM::dataItem> FM::loadTable(int typeTable) // load data from jsonFile
-{    
+{   
     json js ;
     std::ifstream outfile(currentFile);
     outfile >> js ; 
@@ -437,7 +437,7 @@ std::vector<FM::analizeData> FM::analize()
        for (auto& arr : product["prihod"][0])
        {
             bool isFind = false;
-            for (analizeData i : data)
+            for (analizeData& i : data)
             {
                 if(i.data == arr["data"])
                 {
@@ -454,7 +454,7 @@ std::vector<FM::analizeData> FM::analize()
        {
         
             bool isFind = false;
-            for (analizeData i : data)
+            for (analizeData& i : data)
             {
                 if(i.data == arr["data"])
                 {
