@@ -396,18 +396,18 @@ void gui::docuGuiController:: findElement()
             QString surplus  = table->item(rows, 2)->text();
             QString unit  = table->item(rows, 3)->text();
             QString element = uiFind->LE_find->text();
-            if (element[0] == ">" || element[0] == "<")
+            if (element[0] == QString(">") || element[0] == QString("<"))
             {
                 QString convert = element.mid(1);
                 bool isInt = false;
                 convert.toInt(&isInt);
                 if (isInt)
                 {
-                    if ((surplus.toInt() > convert.toInt()) && element[0] == ">")
+                    if ((surplus.toInt() > convert.toInt()) && element[0] == QString(">"))
                     {
                         find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
                     }
-                    else if ((surplus.toInt() < convert.toInt()) && element[0] == "<")
+                    else if ((surplus.toInt() < convert.toInt()) && element[0] == QString("<"))
                     {
                         find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
                     }
