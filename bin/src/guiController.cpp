@@ -325,7 +325,16 @@ void gui::docuGuiController::resetFind()
     }
     else 
     {
-
+        table->setRowCount(0);
+        for (FM::analizeData data : analizeData)
+        {
+            int rows = table->rowCount();
+            table->insertRow(rows);
+            table->setItem(rows, 0, new QTableWidgetItem(QString::fromStdString(data.name)));
+            table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.data)));
+            table->setItem(rows, 2, new QTableWidgetItem(QString::number(data.surplus)));
+            table->setItem(rows, 3, new QTableWidgetItem(QString::fromStdString(data.unit)));
+        }
     }
 }
 void gui::docuGuiController:: findElement()
@@ -365,16 +374,69 @@ void gui::docuGuiController:: findElement()
     }
     else
     {
-    
+       std::vector<FM::analizeData> find ;
+       for (int rows = 0 ; rows < table->rowCount() ; rows++)
+       {
+            QString name  = table->item(rows, 0)->text();
+            QString data  = table->item(rows, 1)->text();
+            QString surplus  = table->item(rows, 2)->text();
+            QString unit  = table->item(rows, 3)->text();
+            QString element = uiFind->LE_find->text();
+            if (element[0] == ">" || element[0] == "<")
+            {
+                QString convert = element.mid(1);
+                bool isInt = false;
+                convert.toInt(&isInt);
+                if (isInt)
+                {
+                    if ((surplus.toInt() > convert.toInt()) && element[0] == ">")
+                    {
+                        find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
+                    }
+                    else if ((surplus.toInt() < convert.toInt()) && element[0] == "<")
+                    {
+                        find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
+                    }
+                }
+            }
+            else if (element == name)
+            {
+               find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
+            }
+            else if (element == data)
+            {
+               find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
+            }
+            else if (element.toInt() == surplus.toInt())
+            {
+               find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
+            }
+            else if (element == unit)
+            {
+               find.push_back({name.toStdString() , data.toStdString() , surplus.toInt() , unit.toStdString()});
+            }
+       }
+     table->setRowCount(0);
+     for (FM::analizeData data : find)
+     {
+        int rows = table->rowCount();
+        table->insertRow(rows);
+        table->setItem(rows, 0, new QTableWidgetItem(QString::fromStdString(data.name)));
+        table->setItem(rows, 1, new QTableWidgetItem(QString::fromStdString(data.data)));
+        table->setItem(rows, 2, new QTableWidgetItem(QString::number(data.surplus)));
+        table->setItem(rows, 3, new QTableWidgetItem(QString::fromStdString(data.unit)));
+     }  
     }
 }
 void gui::docuGuiController::analize()
 {
     QTableWidget* table = UiOstatok->TW_ostatok;
+    analizeData.clear();
     std::vector<FM::analizeData> datas = FM::analize();
     table->setRowCount(0);
     for (FM::analizeData data : datas)
     {
+        analizeData.push_back(data);
         int rows = table->rowCount();
         table->insertRow(rows);
         table->setItem(rows, 0, new QTableWidgetItem(QString::fromStdString(data.name)));

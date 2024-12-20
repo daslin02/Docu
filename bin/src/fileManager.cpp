@@ -439,7 +439,7 @@ std::vector<FM::analizeData> FM::analize()
             bool isFind = false;
             for (analizeData& i : data)
             {
-                if(i.data == arr["data"])
+                if(i.data == arr["data"] && i.name == product["name"] )
                 {
                     isFind = true;
                     i.surplus += arr["count"].get<int>();
@@ -456,7 +456,7 @@ std::vector<FM::analizeData> FM::analize()
             bool isFind = false;
             for (analizeData& i : data)
             {
-                if(i.data == arr["data"])
+                if(i.data == arr["data"] && i.name == product["name"])
                 {
                     isFind = true;
                     i.surplus -= arr["count"].get<int>();

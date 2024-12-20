@@ -1,4 +1,5 @@
 #include "browserWidget.h"
+#include "fileManager.h"
 #include <qlist.h>
 #include <qlocale.h>
 #include <qmainwindow.h>
@@ -24,6 +25,7 @@
 
 #include <prihodWidget.h>
 #include <QStandardItemModel>
+#include <vector>
 
 namespace gui {
 
@@ -83,7 +85,7 @@ private :
     QWidget* dialogFind;
     Ui::browserWidget* uiFind;
    
-
+    std::vector<FM::analizeData> analizeData;
     QMutex* PointOverlay;
     Overlay* findOverlay;
     Overlay* addOverlay;

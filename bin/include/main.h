@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'main.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.15
+** Created by: Qt User Interface Compiler version 5.15.16
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -19,7 +19,6 @@
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include <qmainwindow.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -33,7 +32,7 @@ public:
     QPushButton *PB_prihod;
     QPushButton *PB_rashod;
     QPushButton *PB_ostatok;
-    QPushButton *PB_analize;
+    QPushButton *PB_File;
     QSpacerItem *verticalSpacer;
     QStackedWidget *SW_stacked;
     QWidget *home;
@@ -91,16 +90,16 @@ public:
 
         verticalLayout->addWidget(PB_ostatok);
 
-        PB_analize = new QPushButton(F_ToolPanel);
-        PB_analize->setObjectName(QString::fromUtf8("PB_analize"));
-        PB_analize->setMinimumSize(QSize(50, 30));
-        PB_analize->setCursor(QCursor(Qt::PointingHandCursor));
-        PB_analize->setStyleSheet(QString::fromUtf8("background: #038b71;\n"
+        PB_File = new QPushButton(F_ToolPanel);
+        PB_File->setObjectName(QString::fromUtf8("PB_File"));
+        PB_File->setMinimumSize(QSize(50, 30));
+        PB_File->setCursor(QCursor(Qt::PointingHandCursor));
+        PB_File->setStyleSheet(QString::fromUtf8("background: #038b71;\n"
 "color:black;\n"
 "font-weight:bold;\n"
 "font-size:15px"));
 
-        verticalLayout->addWidget(PB_analize);
+        verticalLayout->addWidget(PB_File);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -133,7 +132,7 @@ public:
         PB_prihod->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\270\321\205\320\276\320\264", nullptr));
         PB_rashod->setText(QCoreApplication::translate("MainWindow", "\320\240\320\260\321\201\321\205\320\276\320\264", nullptr));
         PB_ostatok->setText(QCoreApplication::translate("MainWindow", "\320\236\321\201\321\202\320\260\321\202\320\276\320\272", nullptr));
-        PB_analize->setText(QCoreApplication::translate("MainWindow", "\320\220\320\275\320\260\320\273\320\270\320\267", nullptr));
+        PB_File->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214", nullptr));
     } // retranslateUi
 
 };
@@ -141,8 +140,6 @@ public:
 namespace Ui {
     class MainWindow: public Ui_MainWindow {};
 } // namespace Ui
-
-
 
 QT_END_NAMESPACE
 
