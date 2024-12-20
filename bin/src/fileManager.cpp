@@ -470,3 +470,89 @@ std::vector<FM::analizeData> FM::analize()
     }
     return data;
 }
+
+FM::dataItem FM::getId(int id )
+{
+    json js ;
+    std::ifstream outfile(currentFile);
+    if (!fileIsEmpty(currentFile))
+    {
+        outfile >> js ; 
+    }
+    outfile.close();
+    for (auto& product : js)
+    {
+        for (auto& arr : product["prihod"][0])
+        {
+            if (id == arr["id"] )
+            {
+                return {0 , arr["id"] , product["name"] , arr["data"] ,
+                    arr["unit"] , arr["count"] ,arr["price"],arr["suplier"] };
+            }
+        }
+        for (auto& arr : product["rashod"][0])
+        {
+            if (id == arr["id"] )
+            {
+                return {0 , arr["id"] , product["name"] , arr["data"] ,
+                    arr["unit"] , arr["count"] ,arr["price"],arr["suplier"] };
+            }
+        }
+    }
+
+    return dataItem{};
+}
+bool FM::setId(FM::dataItem value )
+{
+    json js ;
+    std::ifstream outfile(currentFile);
+    if (!fileIsEmpty(currentFile))
+    {
+        outfile >> js ; 
+    }
+    else
+    {
+        return 0;
+    }
+    outfile.close();
+    for (auto& product : js)
+    {
+        for (auto& arr : product["prihod"][0])
+        {
+            if (value.id == arr["id"] )
+            {
+                product["name"] = value.name;
+                arr["data"] = value.data;
+                arr["price"] = value.price;
+                arr["count"] = value.count;
+                arr["unit"] = value.unit;
+                arr["suplier"] = value.suplier;
+
+                std::ofstream file(currentFile);
+                file << js.dump(4);
+                file.close();
+                return 1;
+            }
+        }
+        for (auto& arr : product["rashod"][0])
+        {
+            if (value.id == arr["id"] )
+            {
+                product["name"] = value.name;
+                arr["data"] = value.data;
+                arr["price"] = value.price;
+                arr["count"] = value.count;
+                arr["unit"] = value.unit;
+                arr["suplier"] = value.suplier;
+                
+                std::ofstream file(currentFile);
+                file << js.dump(4);
+                file.close();
+
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}

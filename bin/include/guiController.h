@@ -68,7 +68,9 @@ public slots:
    void resetFind();
    void replaceElement();
    void analize();
+   void onItemchange(QTableWidgetItem* item);
 private :
+    bool systemEdit = false;
     QWidget* prihod;
     Ui::W_prihod* UiPrihod;
 

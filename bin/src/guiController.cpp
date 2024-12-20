@@ -9,6 +9,7 @@
 #include <qlogging.h>
 #include <qpushbutton.h>
 #include <qtablewidget.h>
+#include <string>
 #include <vector>
 #include <fileManager.h>
 
@@ -51,6 +52,7 @@ gui::docuGuiController::~docuGuiController()
 
 void gui::docuGuiController::loadFile()
 {
+    systemEdit = true;
     std::vector<FM::dataItem> dates = FM::loadTable();
     QTableWidget *table ;
     for (FM::dataItem data : dates)
@@ -72,6 +74,7 @@ void gui::docuGuiController::loadFile()
         table->setItem(rows, 5 , new QTableWidgetItem(QString::fromStdString(data.price)));
         table->setItem(rows,6 , new QTableWidgetItem(QString::fromStdString( data.suplier)));
     }
+    systemEdit = false;
 }
 bool gui::docuGuiController::startGui()
 {
@@ -195,6 +198,9 @@ void gui::docuGuiController::runAllEvent()
     connect(UiOstatok->PB_reset , &QPushButton::clicked , this , &docuGuiController::resetFind);
 //connect analizate
     connect(UiOstatok->PB_analize , &QPushButton::clicked , this , &docuGuiController::analize);
+    //edit item for table 
+    connect(UiRashod->TW_rashod , &QTableWidget::itemChanged , this , &docuGuiController::onItemchange);
+    connect(UiPrihod->TW_prihod , &QTableWidget::itemChanged , this , &docuGuiController::onItemchange);
 }
     
 void gui::docuGuiController::showDialogPrihod()
@@ -270,7 +276,7 @@ void gui::docuGuiController::delElement()
          table = UiRashod->TW_rashod;
          break;
     }
-
+    systemEdit = true;
    QList<QTableWidgetItem*> selectedItem = table->selectedItems();
    if(selectedItem.isEmpty())
    {
@@ -289,7 +295,7 @@ void gui::docuGuiController::delElement()
        FM::removeElement(table->item(i , 0)->text().toInt() , isActive);
        table->removeRow(i);
    }
-
+    systemEdit = false;
 }
 void gui::docuGuiController::resetFind()
 {
@@ -306,6 +312,7 @@ void gui::docuGuiController::resetFind()
          table = UiRashod->TW_rashod;
          break;
     }
+    systemEdit = true ;
     if(isActive != OSTATOK)
     {
         table->setRowCount(0);
@@ -336,6 +343,7 @@ void gui::docuGuiController::resetFind()
             table->setItem(rows, 3, new QTableWidgetItem(QString::fromStdString(data.unit)));
         }
     }
+    systemEdit = false;
 }
 void gui::docuGuiController:: findElement()
 {
@@ -343,6 +351,7 @@ void gui::docuGuiController:: findElement()
     {
         return ; 
     }
+    systemEdit = true;
     QTableWidget* table;
     switch (isActive) {
     case PRIHOD:
@@ -427,9 +436,11 @@ void gui::docuGuiController:: findElement()
         table->setItem(rows, 3, new QTableWidgetItem(QString::fromStdString(data.unit)));
      }  
     }
+    systemEdit = false;
 }
 void gui::docuGuiController::analize()
 {
+    systemEdit = true;
     QTableWidget* table = UiOstatok->TW_ostatok;
     analizeData.clear();
     std::vector<FM::analizeData> datas = FM::analize();
@@ -444,6 +455,7 @@ void gui::docuGuiController::analize()
         table->setItem(rows, 2, new QTableWidgetItem(QString::number(data.surplus)));
         table->setItem(rows, 3, new QTableWidgetItem(QString::fromStdString(data.unit)));
     }
+    systemEdit = false;
 }
 void gui::docuGuiController:: addElement()
 {
@@ -463,6 +475,7 @@ void gui::docuGuiController:: addElement()
          table = UiRashod->TW_rashod;
          break;
     }
+    systemEdit = true;
     std::vector<FM::dataItem> isFind = FM::findElement(uiAdd->LE_name->text().toStdString() , -1);
     
     if(isFind.size() > 0)
@@ -490,6 +503,7 @@ void gui::docuGuiController:: addElement()
                 uiAdd->LE_count->text() , uiAdd->LE_suplier->text() ); 
         }
         else {
+            systemEdit = false;
             return;
         }
     }
@@ -508,6 +522,7 @@ void gui::docuGuiController:: addElement()
     uiAdd->LE_count->clear();
     uiAdd->LE_price->clear();
     uiAdd->LE_suplier->clear();
+    systemEdit = false;
 }
 void gui::docuGuiController:: replaceElement()
 {
@@ -528,6 +543,35 @@ void gui::docuGuiController:: replaceElement()
     case RASHOD:
          table = UiRashod->TW_rashod;
          break;
+    }
+}
+void gui::docuGuiController::onItemchange(QTableWidgetItem* item)
+{
+    if (systemEdit) return;
+    QTableWidget* table;
+    switch (isActive) {
+    case PRIHOD:
+        table = UiPrihod->TW_prihod;  
+        break;
+    case OSTATOK:
+        return;
+        break;
+    case RASHOD:
+         table = UiRashod->TW_rashod;
+         break;
+    }
+    if (item->column() != 0)
+    {
+        int row = item->row();  
+        int id = table->item(row, 0)->text().toInt();
+        std::string name = table->item(row, 1)->text().toStdString();
+        std::string data = table->item(row, 2)->text().toStdString();
+        int count = table->item(row, 3)->text().toInt();
+        std::string unit = table->item(row, 4)->text().toStdString();
+        std::string price = table->item(row, 5)->text().toStdString();
+        std::string suplier = table->item(row, 6)->text().toStdString();
+        FM::setId({isActive,id , name ,
+            data , unit , count , price ,suplier });
     }
 }
 bool gui::docuGuiController::isFullValue()
@@ -563,6 +607,7 @@ int gui::docuGuiController::getActive()
 {
     return isActive;
 }
+
 // class Overlay:
 gui::Overlay::Overlay(docuGuiController* docus,
         QWidget* overlays , QObject* parent) :
