@@ -69,6 +69,7 @@ public slots:
    void replaceElement();
    void analize();
    void onItemchange(QTableWidgetItem* item);
+   void generate();
 private :
     bool systemEdit = false;
     QWidget* prihod;

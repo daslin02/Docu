@@ -1,4 +1,3 @@
-#include <complex>
 #include <cstdio>
 #include <pyController.h>
 #include <qcontainerfwd.h>
@@ -7,18 +6,17 @@
 #include <qlogging.h>
 #include <qobject.h>
 #include <qprocess.h>
-#include <iostream>
 #include <filesystem>
-#include <string>
 
 QString pyPath = QString::fromStdString(std::filesystem::current_path())  ;
-void generate(QStringList argument)
+void py::generate(QStringList argument)
 {
     QProcess genJson;
-    QString genJsonPath = pyPath+"/script/genJson.py";
-    QString savePath = pyPath+"/save/save.json";
-    qDebug() << genJsonPath ; 
-    genJson.start(QString("python"), QStringList() << genJsonPath  << savePath << argument);
+    QString genJsonPath = pyPath+"/script/convertor.py";
+    QString outputFile = pyPath+"/save/analize.docx";
+    QString filePath = pyPath+"/save/save.json";
+    genJson.start(QString("python"), QStringList() << genJsonPath  << filePath
+            << outputFile << argument);
 
     genJson.waitForFinished();
     QByteArray data = genJson.readAllStandardOutput();

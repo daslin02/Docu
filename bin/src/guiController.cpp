@@ -201,8 +201,13 @@ void gui::docuGuiController::runAllEvent()
     //edit item for table 
     connect(UiRashod->TW_rashod , &QTableWidget::itemChanged , this , &docuGuiController::onItemchange);
     connect(UiPrihod->TW_prihod , &QTableWidget::itemChanged , this , &docuGuiController::onItemchange);
+    // crate save
+    connect(UiMainWindow->PB_File , &QPushButton::clicked , this , &docuGuiController::generate );
 }
-    
+void gui::docuGuiController::generate()
+{
+    py::generate(QStringList());
+}    
 void gui::docuGuiController::showDialogPrihod()
 {
     QRect overlayGeometry = dialogPrihod->geometry();
