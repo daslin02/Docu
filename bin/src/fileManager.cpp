@@ -1,8 +1,10 @@
 #include <fileManager.h>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <ostream>
 #include <qcontainerfwd.h>
+#include <qdatetime.h>
 #include <qlogging.h>
 #include <string>
 #include <vector>
@@ -356,6 +358,7 @@ void FM::removeElement(int id , int typeTable)
     std::ofstream file(currentFile);
     for (auto& product : js)
     {
+        point = 0;
        if (product[table][0].size() > 0 )
        { 
            for (auto& arr : product[table][0] )
@@ -419,7 +422,7 @@ int FM::newPrimaryKey()
     FM::primaryKey++;
     return primaryKey;
 }
-std::vector<FM::analizeData> FM::analize()
+std::vector<FM::analizeData> FM::analize(QDate before , QDate after)
 {
     std::vector<FM::analizeData> data ;
     if (fileIsEmpty(currentFile))
@@ -430,53 +433,72 @@ std::vector<FM::analizeData> FM::analize()
     std::fstream outFile(currentFile);
     outFile >> js;
     outFile.close();
-    int surplus = 0 ;
-    std::string currentData = "";
     for (auto& product : js)
     {
-       for (auto& arr : product["prihod"][0])
-       {
+        std::cout << "iteration product" << std::endl;
+        for (auto& arr : product["prihod"][0])
+        {
+            std::cout << "iteration prihod" << std::endl;
             bool isFind = false;
             for (analizeData& i : data)
             {
-                if(i.data == arr["data"] && i.name == product["name"] )
+                if (i.name == product["name"])
                 {
+                    std::cout << "is fuck" << std::endl;
                     isFind = true;
                     i.surplus += arr["count"].get<int>();
                 }
             }
             if (!isFind)
             {
-                data.push_back({product["name"] , arr["data"] , arr["count"] , arr["unit"]}); 
-            }
-       }
-       for (auto& arr : product["rashod"][0])
-       {
-        
-            bool isFind = false;
-            for (analizeData& i : data)
-            {
-                if(i.data == arr["data"] && i.name == product["name"])
+                QDate dates = QDate::fromString( QString(arr["data"].get<char>()) , "dd.MM.yyyy");
+                std::cout << "before < dates : " << (before < dates) << std::endl;
+                std::cout << "after > dates : " << (after >  dates) << std::endl;
+                if(before < dates && after > dates) 
                 {
-                    isFind = true;
-                    i.surplus -= arr["count"].get<int>();
+                    std::cout << "prihod add " << std::endl;
+                    data.push_back({product["name"] ,
+                          after.toString().toStdString() , arr["count"] ,
+                            arr["unit"]});
+                }       
+            }
+        }
+        for (auto& arr : product["rashod"][0])
+        {
+            std::cout << "iteration rashod" << std::endl;
+            bool isFind = false;
+                for (analizeData& i : data)
+                {
+                    if (!(i.name == product["name"])) 
+                    {
+                        isFind = true;
+                        i.surplus -= arr["count"].get<int>();
+                    }
+                }
+                if (!isFind)
+                {
+                    
+                    QDate dates = QDate::fromString( QString(arr["data"].get<char>()) , "dd.MM.yyyy");
+                    if(before < dates && after > dates) 
+                    {
+                        std::cout << "rashod add " << std::endl;
+                        data.push_back({product["name"] ,
+                              after.toString().toStdString() , arr["count"] ,
+                                arr["unit"]});
+                    }       
                 }
             }
-            if (!isFind)
-            {
-                data.push_back({product["name"] , arr["data"] , arr["count"] , arr["unit"]}); 
-            }
-       }
+        }
+        std::cout << data.size() << std::endl;
+        return data;
     }
-    return data;
-}
 
-FM::dataItem FM::getId(int id )
-{
-    json js ;
-    std::ifstream outfile(currentFile);
-    if (!fileIsEmpty(currentFile))
+    FM::dataItem FM::getId(int id )
     {
+        json js ;
+        std::ifstream outfile(currentFile);
+        if (!fileIsEmpty(currentFile))
+        {
         outfile >> js ; 
     }
     outfile.close();

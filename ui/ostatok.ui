@@ -29,6 +29,31 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1" colspan="4">
+       <widget class="QLabel" name="L_title">
+        <property name="styleSheet">
+         <string notr="true">font-size:24px;
+font-weight:bold;</string>
+        </property>
+        <property name="text">
+         <string>Остаток</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="QPushButton" name="PB_reset">
+        <property name="styleSheet">
+         <string notr="true">font-size:15px;
+font-weight:bold;</string>
+        </property>
+        <property name="text">
+         <string>Сбросить</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0">
        <widget class="QPushButton" name="PB_find">
         <property name="cursor">
@@ -42,19 +67,6 @@ font-weight:bold;</string>
          <string>Найти</string>
         </property>
        </widget>
-      </item>
-      <item row="2" column="2">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="2" column="1">
        <widget class="QPushButton" name="PB_analize">
@@ -70,28 +82,36 @@ font-weight:bold;</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLabel" name="L_title">
-        <property name="styleSheet">
-         <string notr="true">font-size:24px;
-font-weight:bold;</string>
+      <item row="2" column="2">
+       <widget class="QLineEdit" name="LE_before"/>
+      </item>
+      <item row="2" column="4">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="text">
-         <string>Остаток</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
+       </spacer>
       </item>
       <item row="2" column="3">
-       <widget class="QPushButton" name="PB_reset">
+       <widget class="QLineEdit" name="LE_after"/>
+      </item>
+      <item row="1" column="5">
+       <widget class="QPushButton" name="PB_print">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="styleSheet">
          <string notr="true">font-size:15px;
 font-weight:bold;</string>
         </property>
         <property name="text">
-         <string>Сбросить</string>
+         <string>печать</string>
         </property>
        </widget>
       </item>

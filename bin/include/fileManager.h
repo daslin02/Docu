@@ -4,12 +4,48 @@
 
 #include <nlohmann-json/json.hpp>
 
+#include <optional>
+#include <qcontainerfwd.h>
+#include <qdatetime.h>
 #include <string>
 #include <QString>
 #include <vector>
 
 
+enum struct enumMonth
+{
+    junary = 1 ,
+    february = 2 ,
+    march = 3 ,
+    april = 4 ,
+    may = 5 ,
+    june = 6,
+    july = 7 ,
+    august = 8,
+    semptember = 9 , 
+    octomber = 10 ,
+    november = 11 ,
+    december = 12 
+};
 
+struct dataStruct
+{
+    int day ;
+    int month;
+    int year ;
+    
+    void convertData(QDate data) 
+    {
+        day = data.day();
+        month = data.month();
+        year = data.year();
+    }
+    void convertData(QString data)
+    {
+        QString format = "dd.MM.yyyy";
+        convertData(QDate::fromString(data , format));
+    }
+};
 using json = nlohmann::json;
 
 namespace FM {
@@ -53,7 +89,7 @@ FM::dataItem getId(int id );
 bool setId(dataItem value);
 
 std::vector<FM::dataItem> loadTable(int typetable = -1);
-std::vector<FM::analizeData> analize();
+std::vector<FM::analizeData> analize(QDate before , QDate after);
 
 bool findFile( const std::string& path);
 bool createFile(const std::string& path);

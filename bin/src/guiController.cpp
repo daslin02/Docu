@@ -6,6 +6,7 @@
 #include "rashod.h"
 #include <guiController.h>
 #include <qcontainerfwd.h>
+#include <qdatetime.h>
 #include <qlogging.h>
 #include <qpushbutton.h>
 #include <qtablewidget.h>
@@ -448,10 +449,14 @@ void gui::docuGuiController::analize()
     systemEdit = true;
     QTableWidget* table = UiOstatok->TW_ostatok;
     analizeData.clear();
-    std::vector<FM::analizeData> datas = FM::analize();
+    QString format = "dd.MM.yyyy";
+    qDebug() << "work?";
+    std::vector<FM::analizeData> datas = FM::analize(QDate::fromString( UiOstatok->LE_before->text() , format) 
+            , QDate::fromString(UiOstatok->LE_after->text() , format));
     table->setRowCount(0);
     for (FM::analizeData data : datas)
     {
+        qDebug() << "iteration work";
         analizeData.push_back(data);
         int rows = table->rowCount();
         table->insertRow(rows);
@@ -482,7 +487,7 @@ void gui::docuGuiController:: addElement()
     }
     systemEdit = true;
     std::vector<FM::dataItem> isFind = FM::findElement(uiAdd->LE_name->text().toStdString() , -1);
-    
+   
     if(isFind.size() > 0)
     {
         if(isActive==PRIHOD)
