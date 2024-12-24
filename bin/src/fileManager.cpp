@@ -438,56 +438,71 @@ std::vector<FM::analizeData> FM::analize(QDate before , QDate after)
         std::cout << "iteration product" << std::endl;
         for (auto& arr : product["prihod"][0])
         {
-            std::cout << "iteration prihod" << std::endl;
+            std::cout << "-------------iteration prihod---------------" << std::endl;
             bool isFind = false;
             for (analizeData& i : data)
             {
                 if (i.name == product["name"])
                 {
-                    std::cout << "is fuck" << std::endl;
-                    isFind = true;
-                    i.surplus += arr["count"].get<int>();
+                    std::string calendar = arr["data"]; 
+                    QDate dates = QDate::fromString( QString::fromStdString(calendar) , "dd.MM.yyyy");
+                    if(before <= dates && after >= dates) \
+                    {
+                        isFind = true;
+                        i.surplus += arr["count"].get<int>();
+                    }
                 }
             }
             if (!isFind)
             {
-                QDate dates = QDate::fromString( QString(arr["data"].get<char>()) , "dd.MM.yyyy");
-                std::cout << "before < dates : " << (before < dates) << std::endl;
-                std::cout << "after > dates : " << (after >  dates) << std::endl;
-                if(before < dates && after > dates) 
+                std::string calendar = arr["data"]; 
+                QDate dates = QDate::fromString( QString::fromStdString(calendar) , "dd.MM.yyyy");
+                std::cout << "before: " << before.toString().toStdString() << " | data: " << calendar << " | after: " << after.toString().toStdString() << std::endl; 
+                std::cout << "\tbefore < dates : " << (before < dates) << std::endl;
+                std::cout << "\tafter > dates : " << (after >  dates) << std::endl;
+                if(before <= dates && after >= dates) 
                 {
-                    std::cout << "prihod add " << std::endl;
+                    std::cout << "prihod add - data: "<< dates.toString("dd.MM.yyyy").toStdString() << std::endl;
                     data.push_back({product["name"] ,
-                          after.toString().toStdString() , arr["count"] ,
+                          after.toString("dd.MM.yyyy").toStdString() , arr["count"] ,
                             arr["unit"]});
                 }       
             }
         }
         for (auto& arr : product["rashod"][0])
         {
-            std::cout << "iteration rashod" << std::endl;
+            std::cout << "------------------iteration rashod-----------------" << std::endl;
             bool isFind = false;
-                for (analizeData& i : data)
+            for (analizeData& i : data)
+            {
+                if (i.name == product["name"]) 
                 {
-                    if (!(i.name == product["name"])) 
+                    std::string calendar = arr["data"]; 
+                    QDate dates = QDate::fromString( QString::fromStdString(calendar) , "dd.MM.yyyy");
+                    if(before <= dates && after >= dates) \
                     {
                         isFind = true;
                         i.surplus -= arr["count"].get<int>();
                     }
                 }
-                if (!isFind)
-                {
-                    
-                    QDate dates = QDate::fromString( QString(arr["data"].get<char>()) , "dd.MM.yyyy");
-                    if(before < dates && after > dates) 
-                    {
-                        std::cout << "rashod add " << std::endl;
-                        data.push_back({product["name"] ,
-                              after.toString().toStdString() , arr["count"] ,
-                                arr["unit"]});
-                    }       
-                }
             }
+            if (!isFind)
+            {
+                std::string calendar = arr["data"];
+                QDate dates = QDate::fromString( QString::fromStdString(calendar) , "dd.MM.yyyy");
+                if(before < dates && after > dates) 
+                {
+                    std::cout << "rashod add " << std::endl;
+                    data.push_back({product["name"] ,
+                          after.toString("dd.MM.yyyy").toStdString() , arr["count"] ,
+                            arr["unit"]});
+                }       
+            }
+         }
+     }
+        for (analizeData i : data)
+        {
+            std::cout << "name: "<< i.name <<" | data: " << i.data << " | surplus: " << i.surplus << std::endl;
         }
         std::cout << data.size() << std::endl;
         return data;

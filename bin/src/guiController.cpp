@@ -446,11 +446,14 @@ void gui::docuGuiController:: findElement()
 }
 void gui::docuGuiController::analize()
 {
+    if (UiOstatok->LE_before->text().isEmpty() || UiOstatok->LE_after->text().isEmpty()) return;
+
     systemEdit = true;
     QTableWidget* table = UiOstatok->TW_ostatok;
     analizeData.clear();
     QString format = "dd.MM.yyyy";
     qDebug() << "work?";
+
     std::vector<FM::analizeData> datas = FM::analize(QDate::fromString( UiOstatok->LE_before->text() , format) 
             , QDate::fromString(UiOstatok->LE_after->text() , format));
     table->setRowCount(0);
