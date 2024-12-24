@@ -115,6 +115,20 @@ font-weight:bold;</string>
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="PB_delete">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size:15px;
+font-weight:bold;</string>
+        </property>
+        <property name="text">
+         <string>удалить</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

@@ -4,7 +4,6 @@
 
 #include <nlohmann-json/json.hpp>
 
-#include <optional>
 #include <qcontainerfwd.h>
 #include <qdatetime.h>
 #include <string>
@@ -87,6 +86,7 @@ void removeElement(int id , int typetable);
 std::vector<FM::dataItem> findElement( std::string element , int typeTable);
 FM::dataItem getId(int id );
 bool setId(dataItem value);
+void print(std::vector<FM::analizeData>);
 
 std::vector<FM::dataItem> loadTable(int typetable = -1);
 std::vector<FM::analizeData> analize(QDate before , QDate after);

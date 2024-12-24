@@ -169,7 +169,8 @@ void gui::docuGuiController::runAllEvent()
     
     connect(UiRashod->PB_add  , &QPushButton::clicked , this , &docuGuiController::showDialogPrihod);
    
-
+    //delete row in table
+    connect(UiOstatok->PB_delete , &QPushButton::clicked , this , &docuGuiController::delElement);
     connect(UiPrihod->PB_delete  , &QPushButton::clicked , this , &docuGuiController::delElement);
     
     connect(UiRashod->PB_delete  , &QPushButton::clicked , this , &docuGuiController::delElement);
@@ -204,6 +205,8 @@ void gui::docuGuiController::runAllEvent()
     connect(UiPrihod->TW_prihod , &QTableWidget::itemChanged , this , &docuGuiController::onItemchange);
     // crate save
     connect(UiMainWindow->PB_File , &QPushButton::clicked , this , &docuGuiController::generate );
+    //print 
+    connect(UiOstatok->PB_print , &QPushButton::clicked , this , &docuGuiController::print);
 }
 void gui::docuGuiController::generate()
 {
@@ -276,7 +279,7 @@ void gui::docuGuiController::delElement()
         table = UiPrihod->TW_prihod;  
         break;
     case OSTATOK:
-        return;
+        table = UiOstatok->TW_ostatok;
         break;
     case RASHOD:
          table = UiRashod->TW_rashod;
@@ -619,6 +622,20 @@ bool gui::docuGuiController::isFullValue()
 int gui::docuGuiController::getActive()
 {
     return isActive;
+}
+void gui::docuGuiController::print()
+{
+    std::vector<FM::analizeData> data ;
+    QTableWidget* table = UiOstatok->TW_ostatok;  
+    if (!(table->rowCount() > 0)) return;
+    for (int rows = 0 ; rows < table->rowCount() ; rows++)
+    {
+        data.push_back({table->item(rows, 0)->text().toStdString() ,
+                table->item(rows, 1)->text().toStdString() ,
+                table->item(rows, 2)->text().toInt(),
+                table->item(rows, 3)->text().toStdString()});
+    }
+    FM::print(data);
 }
 
 // class Overlay:

@@ -1,7 +1,6 @@
 #include <fileManager.h>
 #include <fstream>
 #include <iostream>
-#include <optional>
 #include <ostream>
 #include <qcontainerfwd.h>
 #include <qdatetime.h>
@@ -494,7 +493,7 @@ std::vector<FM::analizeData> FM::analize(QDate before , QDate after)
                 {
                     std::cout << "rashod add " << std::endl;
                     data.push_back({product["name"] ,
-                          after.toString("dd.MM.yyyy").toStdString() , arr["count"] ,
+                          after.toString("dd.MM.yyyy").toStdString() , -arr["count"].get<int>() ,
                             arr["unit"]});
                 }       
             }
@@ -508,12 +507,12 @@ std::vector<FM::analizeData> FM::analize(QDate before , QDate after)
         return data;
     }
 
-    FM::dataItem FM::getId(int id )
+FM::dataItem FM::getId(int id )
+{
+    json js ;
+    std::ifstream outfile(currentFile);
+    if (!fileIsEmpty(currentFile))
     {
-        json js ;
-        std::ifstream outfile(currentFile);
-        if (!fileIsEmpty(currentFile))
-        {
         outfile >> js ; 
     }
     outfile.close();
@@ -593,3 +592,20 @@ bool FM::setId(FM::dataItem value )
 
     return 0;
 }
+void FM::print(std::vector<FM::analizeData> data) 
+{
+    json js;
+    
+    for (const auto& item : data) {
+        json entry;
+        entry["name"] = item.name;
+        entry["data"] = item.data;
+        entry["surplus"] = item.surplus;
+        entry["unit"] = item.unit;
+        js.push_back(entry);
+    }
+    std::ofstream outFile(FM::currentPath+"/save/analize.json");
+    outFile << js.dump(4); 
+    outFile.close();
+}
+

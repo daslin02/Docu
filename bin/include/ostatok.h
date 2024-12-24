@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ostatok.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.15
+** Created by: Qt User Interface Compiler version 5.15.16
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -38,6 +38,7 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QLineEdit *LE_after;
     QPushButton *PB_print;
+    QPushButton *PB_delete;
     QTableWidget *TW_ostatok;
 
     void setupUi(QWidget *W_ostatok)
@@ -107,6 +108,14 @@ public:
 
         gridLayout->addWidget(PB_print, 1, 5, 1, 1);
 
+        PB_delete = new QPushButton(F_tipPanel);
+        PB_delete->setObjectName(QString::fromUtf8("PB_delete"));
+        PB_delete->setCursor(QCursor(Qt::PointingHandCursor));
+        PB_delete->setStyleSheet(QString::fromUtf8("font-size:15px;\n"
+"font-weight:bold;"));
+
+        gridLayout->addWidget(PB_delete, 1, 0, 1, 1);
+
 
         verticalLayout->addWidget(F_tipPanel);
 
@@ -143,6 +152,7 @@ public:
         PB_find->setText(QCoreApplication::translate("W_ostatok", "\320\235\320\260\320\271\321\202\320\270", nullptr));
         PB_analize->setText(QCoreApplication::translate("W_ostatok", "\320\220\320\275\320\260\320\273\320\270\320\267", nullptr));
         PB_print->setText(QCoreApplication::translate("W_ostatok", "\320\277\320\265\321\207\320\260\321\202\321\214", nullptr));
+        PB_delete->setText(QCoreApplication::translate("W_ostatok", "\321\203\320\264\320\260\320\273\320\270\321\202\321\214", nullptr));
         QTableWidgetItem *___qtablewidgetitem = TW_ostatok->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QCoreApplication::translate("W_ostatok", "\320\277\321\200\320\276\320\264\321\203\320\272\321\202", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = TW_ostatok->horizontalHeaderItem(1);

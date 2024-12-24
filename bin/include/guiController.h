@@ -70,6 +70,7 @@ public slots:
    void analize();
    void onItemchange(QTableWidgetItem* item);
    void generate();
+   void print();
 private :
     bool systemEdit = false;
     QWidget* prihod;
