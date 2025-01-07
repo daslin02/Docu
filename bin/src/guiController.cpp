@@ -636,8 +636,8 @@ void gui::docuGuiController::print()
                 table->item(rows, 3)->text().toStdString()});
     }
     FM::print(data);
+    py::generate(QStringList());
 }
-
 // class Overlay:
 gui::Overlay::Overlay(docuGuiController* docus,
         QWidget* overlays , QObject* parent) :

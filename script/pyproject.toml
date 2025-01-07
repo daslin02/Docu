@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "convertor"
+version = "0.1.0"
+description = "convert analize JSON in analize doc"
+authors = ["daslin02 <artemserbakov26@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+docx = "^0.2.4"
+pyinstaller = { version = "^6.11.1", python = ">=3.13,<3.14" }
+python-docx = "^1.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

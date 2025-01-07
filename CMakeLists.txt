@@ -1,5 +1,20 @@
 cmake_minimum_required(VERSION 3.5)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(STATUS "Operating System: Linux")
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message(STATUS "Operating System: Windows")
+    
+    set(CMAKE_SYSTEM_NAME Windows)
+    set(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+    set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message(STATUS "Operating System: macOS")
+else()
+    message(STATUS "Operating System: Unknown")
+endif()
+
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -26,3 +41,4 @@ add_subdirectory(bin)
 target_link_libraries(docu PRIVATE GuiControl)
 target_link_libraries(docu PRIVATE pyController)
 target_link_libraries(docu PRIVATE fileManager )
+
